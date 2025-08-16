@@ -9,14 +9,14 @@
 }:
 with lib;
 with lib.${namespace}; let
-  cfg = config.${namespace}.cli-apps.neovim;
+  cfg = config.${namespace}.cli-apps.nixvim;
 in {
-  options.${namespace}.cli-apps.neovim = with types; {
-    enable = mkBoolOpt true "Whether or not to enable neovim configuration.";
+  options.${namespace}.cli-apps.nixvim = with types; {
+    enable = mkBoolOpt true "Whether or not to enable nixvim configuration.";
   };
 
   config = mkIf cfg.enable {
-    programs.neovim.enable = true;
+    programs.nixvim.enable = true;
 
     environment.variables = {
       PAGER = "less";
@@ -26,7 +26,7 @@ in {
 
     universe.home = {
       extraOptions = {
-        # Use Neovim for Git diffs.
+        # Use Neovim or Git diffs.
         programs.zsh.shellAliases.vimdiff = "nvim -d";
         programs.bash.shellAliases.vimdiff = "nvim -d";
         programs.fish.shellAliases.vimdiff = "nvim -d";

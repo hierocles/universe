@@ -14,7 +14,7 @@ with lib.${namespace}; {
     };
     cli-apps = {
       zsh = enabled;
-      neovim = enabled;
+      nixvim = enabled;
       home-manager = enabled;
     };
     tools = {

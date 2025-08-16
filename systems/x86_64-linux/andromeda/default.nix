@@ -28,7 +28,7 @@ with lib.${namespace}; {
       };
     };
     cli-apps = {
-      neovim = enabled;
+      nixvim = enabled;
     };
     tools = {
       git = enabled;

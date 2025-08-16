@@ -7,17 +7,16 @@
 }: let
   inherit (lib) mkEnableOption mkIf;
 
-  cfg = config.${namespace}.cli-apps.neovim;
+  cfg = config.${namespace}.cli-apps.nixvim;
 in {
-  options.${namespace}.cli-apps.neovim = {
-    enable = mkEnableOption "Neovim";
+  options.${namespace}.cli-apps.nixvim = {
+    enable = mkEnableOption "Nixvim";
   };
 
   config = mkIf cfg.enable {
     home = {
       packages = with pkgs; [
         less
-        neovim
       ];
 
       sessionVariables = {
@@ -30,6 +29,8 @@ in {
       shellAliases = {
         vimdiff = "nvim -d";
       };
+
+      programs.nixvim.enable = true;
     };
 
     xdg.configFile = {
