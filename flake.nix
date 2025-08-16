@@ -17,11 +17,11 @@
     #flake.inputs.nixpkgs.follows = "nixpkgs";
 
     # Snowfall Thaw
-    thaw.url = "github:snowfallorg/thaw";
+    #thaw.url = "github:snowfallorg/thaw";
 
     # Snowfall Drift
-    drift.url = "github:snowfallorg/drift";
-    drift.inputs.nixpkgs.follows = "nixpkgs";
+    #drift.url = "github:snowfallorg/drift";
+    #drift.inputs.nixpkgs.follows = "nixpkgs";
 
     # Cursor Server for remote development
     cursor-server = {

@@ -50,7 +50,6 @@ in {
       nix-index
       nix-output-monitor
       alejandra
-      snowfallorg.drift
     ];
 
     nix = let
