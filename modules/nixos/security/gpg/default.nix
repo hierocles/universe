@@ -16,6 +16,7 @@ with lib.${namespace}; let
     default-cache-ttl 60
     max-cache-ttl 120
     pinentry-program ${pkgs.pinentry-curses}/bin/pinentry-curses
+    allow-loopback-pinentry
   '';
 in {
   options.${namespace}.security.gpg = with types; {
@@ -62,7 +63,11 @@ in {
       home.file = {
         ".gnupg/.keep".text = "";
 
-        ".gnupg/gpg.conf".source = gpgConf;
+        ".gnupg/gpg.conf".text = ''
+          ${builtins.readFile gpgConf}
+          use-agent
+          pinentry-mode loopback
+        '';
         ".gnupg/gpg-agent.conf".text = gpgAgentConf;
 
         # Import the GPG public key
