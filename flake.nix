@@ -85,8 +85,11 @@
 
       systems.modules.nixos = with inputs; [
         home-manager.nixosModules.home-manager
-        nixos-wsl.nixosModules.wsl
         nix-ld.nixosModules.nix-ld
+      ];
+
+      systems.hosts.andromeda.modules = with inputs; [
+        nixos-wsl.nixosModules.wsl
       ];
 
       outpus-builder = channels: {formatter = channels.nixpkgs.alejandra;};
