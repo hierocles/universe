@@ -2,7 +2,7 @@
   lib,
   writeText,
   writeShellApplication,
-  substituteAll,
+  replaceVars,
   gum,
   inputs,
   hosts ? {},
@@ -12,7 +12,7 @@
   inherit (lib) mapAttrsToList concatStringsSep;
   inherit (lib.${namespace}) override-meta;
 
-  substitute = args: builtins.readFile (substituteAll args);
+  substitute = args: builtins.readFile (replaceVars args);
 
   formatted-hosts = mapAttrsToList (name: host: "${name},${host.pkgs.system}") hosts;
 
