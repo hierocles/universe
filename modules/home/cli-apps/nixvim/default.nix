@@ -14,6 +14,8 @@ in {
   };
 
   config = mkIf cfg.enable {
+    programs.nixvim.enable = true;
+
     home = {
       packages = with pkgs; [
         less
@@ -29,8 +31,6 @@ in {
       shellAliases = {
         vimdiff = "nvim -d";
       };
-
-      programs.nixvim.enable = true;
     };
 
     xdg.configFile = {
