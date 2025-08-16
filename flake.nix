@@ -63,8 +63,8 @@
     deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs:
-    inputs.snowfall-lib.mkFlake {
+  outputs = inputs: let
+    lib = inputs.snowfall-lib.mkFlake {
       inherit inputs;
       src = ./.;
 
@@ -75,5 +75,23 @@
           title = "Universe";
         };
       };
+    };
+  in
+    lib.mkFlake
+    {
+      channels-config = {
+        allowUnfree = true;
+      };
+
+      systems.modules.nixos = with inputs; [
+        home-manager.nixosModules.home-manager
+        nixos-wsl.nixosModules.wsl
+        nix-ld.nixosModules.nix-ld
+      ];
+
+      outpus-builder = channels: {formatter = channels.nixpkgs.alejandra;};
+    }
+    // {
+      self = inputs.self;
     };
 }
