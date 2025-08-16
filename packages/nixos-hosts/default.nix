@@ -12,7 +12,7 @@
   inherit (lib) mapAttrsToList concatStringsSep;
   inherit (lib.${namespace}) override-meta;
 
-  substitute = args: builtins.readFile (replaceVars args);
+  substitute = args: replaceVars args.src args;
 
   formatted-hosts = mapAttrsToList (name: host: "${name},${host.pkgs.system}") hosts;
 
