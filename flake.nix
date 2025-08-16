@@ -91,6 +91,7 @@
 
       systems.hosts.andromeda.modules = with inputs; [
         nixos-wsl.nixosModules.wsl
+        cursor-server.nixosModules.default
       ];
 
       outpus-builder = channels: {formatter = channels.nixpkgs.alejandra;};
