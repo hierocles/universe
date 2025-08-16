@@ -17,7 +17,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    ${inputs.nixos-wsl.nixosModules.wsl} = {
+    wsl = {
       enable = true;
       defaultUser = cfg.default-user;
     };
