@@ -1,7 +1,7 @@
 {
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:NixOS/nixpkgs/unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # WSL
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
