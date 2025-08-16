@@ -9,7 +9,7 @@ with lib;
 with lib.${namespace}; {
   universe = {
     nix = {
-      enabled = true;
+      enable = true;
       extra-substituters = {
         nix-community = {
           url = "https://nix-community.cachix.org";
