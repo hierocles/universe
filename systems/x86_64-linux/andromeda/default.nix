@@ -8,15 +8,16 @@
 with lib;
 with lib.${namespace}; {
   universe = {
+    user = {
+      name = "dylan";
+    };
     nix = {
       enable = true;
       extra-substituters = {
-        nix-community = {
-          url = "https://nix-community.cachix.org";
+        "https://nix-community.cachix.org" = {
           key = "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
         };
-        numtide = {
-          url = "https://numtide.cachix.org";
+        "https://numtide.cachix.org" = {
           key = "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE=";
         };
       };
@@ -27,9 +28,7 @@ with lib.${namespace}; {
         default-user = config.${namespace}.user.name;
       };
     };
-    cli-apps = {
-      nixvim = enabled;
-    };
+
     tools = {
       git = enabled;
       comma = enabled;

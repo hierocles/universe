@@ -14,7 +14,6 @@ with lib.${namespace}; {
     };
     cli-apps = {
       zsh = enabled;
-      nixvim = enabled;
       home-manager = enabled;
     };
     tools = {
@@ -22,6 +21,11 @@ with lib.${namespace}; {
       direnv = enabled;
     };
   };
+
+  # Use basic neovim for now to avoid module issues
+  home.packages = with pkgs; [
+    neovim
+  ];
 
   home.sessionPath = ["$HOME/bin"];
   home.stateVersion = "25.05";

@@ -3,6 +3,7 @@
   config,
   pkgs,
   lib,
+  inputs,
   namespace,
   ...
 }:
@@ -57,7 +58,7 @@ in {
               character = {
                 success_symbol = "[➜](bold green)";
                 error_symbol = "[✗](bold red) ";
-                vicmd_symbol = "[](bold blue) ";
+                vicmd_symbol = "[ ](bold blue) ";
               };
             };
           };
