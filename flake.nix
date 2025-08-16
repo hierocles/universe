@@ -38,8 +38,8 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # Hardware
-    nix-hardware-config.url = "github:nix-community/nix-hardware-config";
-    nix-hardware-config.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-hardware.url = "github:nix-community/nixos-hardware";
+    nixos-hardware.inputs.nixpkgs.follows = "nixpkgs";
 
     # GPG
     gpg-base-conf = {
