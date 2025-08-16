@@ -13,11 +13,11 @@
     };
 
     # Snowfall Flake
-    flake.url = "github:snowfallorg/flake?ref=v1.4.1";
+    flake.url = "github:snowfallorg/flake";
     flake.inputs.nixpkgs.follows = "nixpkgs";
 
     # Snowfall Thaw
-    thaw.url = "github:snowfallorg/thaw?ref=v1.0.7";
+    thaw.url = "github:snowfallorg/thaw";
 
     # Snowfall Drift
     drift.url = "github:snowfallorg/drift";
