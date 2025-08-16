@@ -57,12 +57,6 @@
     # System Deployment
     deploy-rs.url = "github:serokell/deploy-rs";
     deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Jake Hamilton's Neovim configuration (commented out - using local config)
-    # neovim = {
-    #   url = "github:jakehamilton/neovim";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
   };
 
   outputs = inputs: let
@@ -84,9 +78,6 @@
       channels-config = {
         allowUnfree = true;
       };
-
-      overlays = with inputs; [
-      ];
 
       systems.modules.nixos = with inputs; [
         home-manager.nixosModules.home-manager
