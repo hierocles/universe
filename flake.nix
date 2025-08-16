@@ -86,6 +86,7 @@
       systems.modules.nixos = with inputs; [
         home-manager.nixosModules.home-manager
         nix-ld.nixosModules.nix-ld
+        nixvim.nixosModules.nixvim
       ];
 
       systems.hosts.andromeda.modules = with inputs; [
