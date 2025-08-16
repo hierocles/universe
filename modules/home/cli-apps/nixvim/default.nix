@@ -3,6 +3,7 @@
   config,
   pkgs,
   namespace,
+  inputs,
   ...
 }: let
   inherit (lib) mkEnableOption mkIf;
@@ -14,7 +15,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    programs.nixvim.enable = true;
+    ${inputs.nixvim.homeModules.nixvim}.enable = true;
 
     home = {
       packages = with pkgs; [
