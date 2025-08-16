@@ -36,6 +36,9 @@ with lib.${namespace}; {
       nil = enabled;
       cursor-server = enabled;
     };
+    security = {
+      gpg = enabled;
+    };
   };
 
   system.stateVersion = "25.05";

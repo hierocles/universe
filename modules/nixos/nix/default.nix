@@ -44,7 +44,6 @@ in {
 
     environment.systemPackages = with pkgs; [
       universe.nixos-revision
-      (universe.nixos-hosts.override {hosts = inputs.self.nixosConfigurations;})
       deploy-rs
       nix-prefetch-git
       nix-index
