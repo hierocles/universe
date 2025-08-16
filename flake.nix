@@ -57,6 +57,10 @@
     # System Deployment
     deploy-rs.url = "github:serokell/deploy-rs";
     deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
+
+    # SOPS for secrets management
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs: let
@@ -81,6 +85,7 @@
 
       systems.modules.nixos = with inputs; [
         home-manager.nixosModules.home-manager
+        sops-nix.nixosModules.sops
       ];
 
       systems.hosts.andromeda.modules = with inputs; [
