@@ -67,7 +67,7 @@
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
 
     # Determinate Nix
-    inputs.determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
   };
 
   outputs = inputs: let
