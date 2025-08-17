@@ -3,6 +3,7 @@
   pkgs,
   config,
   namespace,
+  osConfig,
   ...
 }:
 with lib;
@@ -26,9 +27,6 @@ with lib.${namespace}; {
   home.packages = with pkgs; [
     neovim
   ];
-
-  # GPG public key for commit signing (now managed by SOPS)
-  home.file.".gnupg/dylan-gpg-public.asc".source = config.sops.secrets."users/dylan/gpg-public-key".path;
 
   home.sessionPath = ["$HOME/bin"];
   home.stateVersion = "25.05";

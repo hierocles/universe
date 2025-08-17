@@ -40,12 +40,13 @@ with lib.${namespace}; {
       gpg = enabled;
       sops = {
         enable = true;
-        defaultSopsFile = ../../secrets/sops.yaml;
+        defaultSopsFile = ../../../secrets/sops.yaml;
         ageKeyFile = "/etc/sops/age/system.txt";
         userSecrets = {
           dylan = {
             "gpg-public-key" = {
               mode = "0644";
+              path = "/home/dylan/.gnupg/dylan-gpg-public.asc";
             };
           };
         };
