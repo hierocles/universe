@@ -54,5 +54,10 @@ with lib.${namespace}; {
     };
   };
 
+  environment.systemPackages = with pkgs; [
+    statix
+    deadnix
+  ];
+
   system.stateVersion = "25.05";
 }
