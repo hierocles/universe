@@ -36,6 +36,11 @@ with lib.${namespace}; {
       nil = enabled;
       cursor-server = enabled;
     };
+    # TODO: Write *arr modules
+    # TODO: Write disko module
+    # TODO: Write zfs module
+    # TODO: Write VPN module
+
     security = {
       gpg = enabled;
       sops = {
