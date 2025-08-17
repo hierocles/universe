@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  pkgs,
   namespace,
   ...
 }: let
@@ -9,7 +8,7 @@
   inherit (lib.${namespace}) mkOpt enabled;
 
   cfg = config.${namespace}.tools.git;
-  user = config.${namespace}.user;
+  inherit (config.${namespace}) user;
 in {
   options.${namespace}.tools.git = {
     enable = mkEnableOption "Git";

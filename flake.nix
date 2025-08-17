@@ -61,6 +61,10 @@
     # SOPS for secrets management
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Pre-commit hooks
+    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
+    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs: let
@@ -94,10 +98,16 @@
       ];
 
       outputs-builder = channels: {
-        formatter = channels.nixpkgs.alejandra;
+        inherit (channels.nixpkgs) alejandra;
         checks = {
-          deadnix = channels.nixpkgs.deadnix;
-          statix = channels.nixpkgs.statix;
+          inherit (channels.nixpkgs) deadnix statix;
+          pre-commit-check = inputs.pre-commit-hooks.lib.${channels.nixpkgs.system}.run {
+            src = ./.;
+            hooks = {
+              deadnix.enable = true;
+              statix.enable = true;
+            };
+          };
         };
       };
     };

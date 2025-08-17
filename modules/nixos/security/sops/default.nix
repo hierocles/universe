@@ -1,9 +1,7 @@
 {
   options,
   config,
-  pkgs,
   lib,
-  inputs,
   namespace,
   ...
 }:
@@ -43,12 +41,12 @@ in {
       }
     ];
     sops = {
-      defaultSopsFile = cfg.defaultSopsFile;
+      inherit (cfg) defaultSopsFile;
       age.sshKeyPaths = mkIf (cfg.ageSshKeyPaths != []) cfg.ageSshKeyPaths;
       age.keyFile = mkIf (cfg.ageKeyFile != null) cfg.ageKeyFile;
       gnupg.sshKeyPaths = mkIf (cfg.gpgKeyPaths != []) cfg.gpgKeyPaths;
       validateSopsFiles = mkIf cfg.validate true;
-      templates = mkIf (cfg.templates != {}) cfg.templates;
+      inherit (cfg) templates;
 
       # Combine all secret types
       secrets =

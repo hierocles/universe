@@ -3,7 +3,6 @@
   pkgs,
   config,
   namespace,
-  osConfig,
   ...
 }:
 with lib;
@@ -11,7 +10,7 @@ with lib.${namespace}; {
   universe = {
     user = {
       enable = true;
-      name = config.snowfallorg.user.name;
+      inherit (config.snowfallorg.user) name;
     };
     cli-apps = {
       zsh = enabled;
@@ -23,11 +22,11 @@ with lib.${namespace}; {
     };
   };
 
-  # Use basic neovim for now to avoid module issues
-  home.packages = with pkgs; [
-    neovim
-  ];
-
-  home.sessionPath = ["$HOME/bin"];
-  home.stateVersion = "25.05";
+  home = {
+    packages = with pkgs; [
+      neovim
+    ];
+    sessionPath = ["$HOME/bin"];
+    stateVersion = "25.05";
+  };
 }

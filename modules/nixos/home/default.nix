@@ -1,16 +1,12 @@
 {
   options,
   config,
-  pkgs,
   lib,
-  inputs,
   namespace,
   ...
 }:
 with lib;
-with lib.${namespace}; let
-  cfg = config.${namespace}.home;
-in {
+with lib.${namespace}; {
   options.${namespace}.home = with types; {
     file = mkOpt attrs {} (mdDoc "A set of files to be managed by home-manager's `home.file`.");
     configFile = mkOpt attrs {} (

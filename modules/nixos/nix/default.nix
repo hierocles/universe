@@ -3,7 +3,6 @@
   config,
   pkgs,
   lib,
-  inputs,
   namespace,
   ...
 }:
@@ -11,13 +10,11 @@ with lib;
 with lib.${namespace}; let
   cfg = config.${namespace}.nix;
 
-  substituters-submodule = types.submodule (
-    {name, ...}: {
-      options = with types; {
-        key = mkOpt (nullOr str) null "The trusted public key for this substituter.";
-      };
-    }
-  );
+  substituters-submodule = types.submodule {
+    options = with types; {
+      key = mkOpt (nullOr str) null "The trusted public key for this substituter.";
+    };
+  };
 in {
   options.${namespace}.nix = with types; {
     enable = mkBoolOpt true "Whether or not to manage nix configuration.";
@@ -57,7 +54,7 @@ in {
         config.${namespace}.user.name
       ];
     in {
-      package = cfg.package;
+      inherit (cfg) package;
 
       settings =
         {
@@ -74,12 +71,12 @@ in {
             [
               cfg.default-substituter.url
             ]
-            ++ (mapAttrsToList (name: value: name) cfg.extra-substituters);
+            ++ (mapAttrsToList (name: _: name) cfg.extra-substituters);
           trusted-public-keys =
             [
               cfg.default-substituter.key
             ]
-            ++ (mapAttrsToList (name: value: value.key) cfg.extra-substituters);
+            ++ (mapAttrsToList (_: value: value.key) cfg.extra-substituters);
         }
         // (lib.optionalAttrs config.${namespace}.tools.direnv.enable {
           # keep-outputs = true;

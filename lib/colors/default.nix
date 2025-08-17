@@ -1,8 +1,4 @@
-{
-  lib,
-  inputs,
-  snowfall-inputs,
-}: rec {
+{...}: rec {
   colors = {
     without-hash = color: builtins.substring 1 (builtins.stringLength color) color;
 

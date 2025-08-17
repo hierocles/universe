@@ -3,20 +3,19 @@
   config,
   pkgs,
   lib,
-  inputs,
   namespace,
   ...
 }:
 with lib;
 with lib.${namespace}; let
   cfg = config.${namespace}.tools.git;
-  gpg = config.${namespace}.security.gpg;
-  user = config.${namespace}.user;
+  inherit (config.${namespace}.security) gpg;
+  inherit (config.${namespace}) user;
 in {
   options.${namespace}.tools.git = with types; {
     enable = mkBoolOpt false "Whether or not to enable git configuration.";
-    userName = mkOpt types.str user.name "The name to use for git.";
-    userEmail = mkOpt types.str user.email "The email to use for git.";
+    name = mkOpt types.str user.name "The name to use for git.";
+    email = mkOpt types.str user.email "The email to use for git.";
     signingKey = mkOpt types.str gpg.default-key "The signing key to use for git.";
   };
 
@@ -28,7 +27,7 @@ in {
     universe.home.extraOptions = {
       programs.git = {
         enable = true;
-        inherit (cfg) userName userEmail;
+        inherit (cfg) name email;
         lfs = enabled;
         signing = {
           key = cfg.signingKey;

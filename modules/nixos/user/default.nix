@@ -3,7 +3,6 @@
   config,
   pkgs,
   lib,
-  inputs,
   namespace,
   ...
 }:
@@ -100,7 +99,7 @@ in {
 
         uid = 1000;
 
-        extraGroups = cfg.extraGroups;
+        inherit (cfg) extraGroups;
       }
       // cfg.extraOptions;
   };
