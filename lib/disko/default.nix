@@ -79,62 +79,54 @@ in {
   # Create a striped mirror ZFS pool with multiple vdevs
   # Each vdev is a mirror of 2 disks, and multiple vdevs are striped together
   mkStripedMirrorZfsLayout = {
-    vdevs, # List of vdev configurations, each containing 2 devices for mirroring
+    vdevs, # List of vdev configurations, each containing device mappings (diskName -> devicePath)
     poolName, # Name of the ZFS pool
-    datasetMountpoints, # Mountpoints for datasets
-    datasetOptions ? {}, # Options for datasets
+    mountpoint, # Main mountpoint for the pool
+    datasetOptions ? {}, # Options for the pool
   }: let
-    # Flatten all devices from all vdevs into a single list for disk configuration
-    allDevices = lib.flatten (lib.map (vdev: lib.attrValues vdev) vdevs);
-
     # Create disk configurations for all devices
-    mkDiskConfig = device: {
-      name = lib.getName device;
-      value = {
-        inherit device;
-        type = "disk";
-        content = {
-          type = "gpt";
-          partitions = {
-            zfs = {
-              size = "100%";
-              content = {
-                type = "zfs";
-                pool = poolName;
+    mkDiskConfig = vdev:
+      lib.mapAttrs' (diskName: devicePath: {
+        name = diskName;
+        value = {
+          device = devicePath;
+          type = "disk";
+          content = {
+            type = "gpt";
+            partitions = {
+              zfs = {
+                size = "100%";
+                content = {
+                  type = "zfs";
+                  pool = poolName;
+                };
               };
             };
           };
         };
-      };
-    };
-
-    # Build disk configurations for all devices
-    diskConfigs = lib.listToAttrs (lib.map mkDiskConfig allDevices);
-
-    # Create datasets configuration
-    datasets =
-      lib.mapAttrs' (name: mountpoint: {
-        type = "zfs_fs";
-        mountpoint = mountpoint;
       })
-      datasetMountpoints;
+      vdev;
 
-    # Build vdev configuration for the pool
-    # Each vdev should be a mirror of 2 devices
-    vdevConfig =
-      lib.map (vdev: {
-        type = "mirror";
-        disks = lib.attrValues vdev;
-      })
-      vdevs;
+    # Build disk configurations for all devices from all vdevs
+    diskConfigs = lib.foldl' (acc: vdev: acc // (mkDiskConfig vdev)) {} vdevs;
+
+    # Build the correct ZFS pool topology for disko
+    # Format: "mirror disk1 disk2 mirror disk3 disk4" for striped mirrors
+    poolTopology = lib.concatStringsSep " " (
+      lib.map (
+        vdev:
+          "mirror " + (lib.concatStringsSep " " (lib.attrNames vdev))
+      )
+      vdevs
+    );
   in {
     disk = diskConfigs;
     zpool = {
       ${poolName} = {
         type = "zpool";
-        vdevs = vdevConfig;
+        mode = poolTopology;
+        inherit mountpoint;
         options = datasetOptions;
-        datasets = datasets;
       };
     };
   };

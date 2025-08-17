@@ -1,7 +1,5 @@
 {
   lib,
-  pkgs,
-  config,
   namespace,
   ...
 }:
@@ -32,13 +30,31 @@ with lib.${namespace}; {
           }
         ];
         poolName = "media";
-        datasetMountpoints = {
-          "media" = "/mnt/media";
-        };
+        mountpoint = "/mnt/media";
         datasetOptions = {
-          "media" = {
-            "com.sun:auto-snapshot" = "false";
-          };
+          # Disable automatic snapshots for media storage
+          "com.sun:auto-snapshot" = "false";
+
+          # Compression - lz4 is fast and provides good compression for media files
+          compression = "lz4";
+
+          # Disable access time updates for better performance
+          atime = "off";
+
+          # Use larger record sizes for better sequential I/O (ideal for media files)
+          recordsize = "1M";
+
+          # Optimize for sequential access patterns (media streaming)
+          primarycache = "metadata";
+
+          # Disable deduplication (not useful for media files and uses lots of RAM)
+          dedup = "off";
+
+          # Set reasonable sync behavior for better performance
+          sync = "standard";
+
+          # Optimize for large files (media content)
+          logbias = "throughput";
         };
       };
 
@@ -49,7 +65,7 @@ with lib.${namespace}; {
       };
     in {
       disk = stripedMirrorConfig.disk // nvmeConfig.disk;
-      zpool = stripedMirrorConfig.zpool;
+      inherit (stripedMirrorConfig) zpool;
     };
   };
 }

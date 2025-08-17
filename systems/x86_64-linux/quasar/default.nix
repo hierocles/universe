@@ -1,7 +1,5 @@
 {
   lib,
-  pkgs,
-  config,
   namespace,
   ...
 }:
@@ -28,6 +26,18 @@ with lib.${namespace}; {
       };
     };
 
+    system = {
+      boot = {
+        enable = true;
+        loader = "systemd-boot";
+        efi = true;
+      };
+      networking = {
+        enable = true;
+        hostId = "8425e349"; # Required for ZFS
+      };
+    };
+
     tools = {
       git = enabled;
       comma = enabled;
@@ -36,8 +46,6 @@ with lib.${namespace}; {
       cursor-server = enabled;
     };
     # TODO: Write *arr modules
-    # TODO: Write disko module
-    # TODO: Write zfs module
     # TODO: Write VPN module
 
     security = {
