@@ -17,7 +17,6 @@ in {
     ageSshKeyPaths = mkOpt (listOf str) [] "The paths to the SSH keys to use for SOPS.";
     secrets = mkOpt attrs {} "A set of secrets to manage.";
     ageKeyFile = mkOpt (nullOr str) null "The path to the age key file to use for SOPS.";
-    gpgKeyPaths = mkOpt (listOf str) [] "The paths to the GPG keys to use for SOPS.";
     validate = mkBoolOpt true "Whether or not to validate the SOPS files. Default: true";
     templates = mkOpt attrs {} "A set of templates to use for SOPS.";
 
@@ -30,8 +29,8 @@ in {
   config = mkIf cfg.enable {
     assertions = [
       {
-        assertion = cfg.ageSshKeyPaths != [] || cfg.ageKeyFile != null || cfg.gpgKeyPaths != [];
-        message = "At least one of universe.security.sops.ageSshKeyPaths, universe.security.sops.ageKeyFile, or universe.security.sops.gpgKeyPaths must be set";
+        assertion = cfg.ageSshKeyPaths != [] || cfg.ageKeyFile != null;
+        message = "At least one of universe.security.sops.ageSshKeyPaths or universe.security.sops.ageKeyFile must be set";
       }
       {
         assertion = cfg.defaultSopsFile != null;
@@ -49,16 +48,11 @@ in {
         assertion = cfg.ageKeyFile == null || (builtins.pathExists cfg.ageKeyFile);
         message = "universe.security.sops.ageKeyFile path does not exist: ${toString cfg.ageKeyFile}";
       }
-      {
-        assertion = cfg.gpgKeyPaths == [] || (builtins.pathExists cfg.gpgKeyPaths);
-        message = "universe.security.sops.gpgKeyPaths path does not exist: ${toString cfg.gpgKeyPaths}";
-      }
     ];
     sops = {
       defaultSopsFile = cfg.defaultSopsFile;
       age.sshKeyPaths = mkIf (cfg.ageSshKeyPaths != []) cfg.ageSshKeyPaths;
       age.keyFile = mkIf (cfg.ageKeyFile != null) cfg.ageKeyFile;
-      gpg.keyFiles = mkIf (cfg.gpgKeyPaths != []) cfg.gpgKeyPaths;
       validateSopsFiles = mkIf cfg.validate true;
       templates = mkIf (cfg.templates != {}) cfg.templates;
 
