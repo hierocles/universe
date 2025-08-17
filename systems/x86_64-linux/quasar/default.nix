@@ -26,6 +26,15 @@ with lib.${namespace}; {
       };
     };
 
+    # Deployment configuration (used by deploy-rs)
+    deployment = {
+      enable = true;
+      hostname = "quasar.local"; # Update with actual hostname/IP
+      fastConnection = true;
+      sshUser = "root";
+      user = "root";
+    };
+
     system = {
       boot = {
         enable = true;

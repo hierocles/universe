@@ -12,17 +12,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Snowfall Flake
-    #flake.url = "github:snowfallorg/flake";
-    #flake.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Snowfall Thaw
-    #thaw.url = "github:snowfallorg/thaw";
-
-    # Snowfall Drift
-    #drift.url = "github:snowfallorg/drift";
-    #drift.inputs.nixpkgs.follows = "nixpkgs";
-
     # Cursor Server for remote development
     cursor-server = {
       url = "github:zoid-archive/nixos-cursor-server";
@@ -72,7 +61,6 @@
 
     # VPN Confinement for secure torrenting
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
-    vpn-confinement.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs: let
@@ -88,9 +76,9 @@
         };
       };
     };
-  in
-    lib.mkFlake
-    {
+
+    # Create the flake first so we can reference it
+    flake = lib.mkFlake {
       channels-config = {
         allowUnfree = true;
       };
@@ -104,11 +92,20 @@
         vpn-confinement.nixosModules.default
       ];
 
-      outputs-builder = channels: {
+      # Define system specialArgs
+      systems.specialArgs = {
+        # Pass the disko module to system configurations
+        inherit (inputs) disko;
+      };
+
+      outputs-builder = channels: let
+        system = channels.nixpkgs.system;
+      in {
         inherit (channels.nixpkgs) alejandra;
+
         checks = {
           inherit (channels.nixpkgs) deadnix statix;
-          pre-commit-check = inputs.pre-commit-hooks.lib.${channels.nixpkgs.system}.run {
+          pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
             src = ./.;
             hooks = {
               deadnix.enable = true;
@@ -116,6 +113,51 @@
             };
           };
         };
+
+        devShells.default = channels.nixpkgs.mkShell {
+          buildInputs = with channels.nixpkgs; [
+            inputs.deploy-rs.packages.${system}.default
+            sops
+            age
+            nixos-rebuild
+            alejandra
+          ];
+
+          shellHook = ''
+            echo "🚀 NixOS Deployment Environment"
+            echo "Available tools:"
+            echo "  • deploy     - Deploy configurations with deploy-rs"
+            echo "  • sops       - Edit secrets"
+            echo "  • nixos-rebuild - Test configurations locally"
+            echo ""
+            echo "Usage examples:"
+            echo "  deploy .#quasar           - Deploy to quasar system"
+          '';
+        };
       };
+    };
+
+    # Define deploy-rs configuration using the flake we just created
+    deployConfig = {
+      nodes = {
+        quasar = {
+          hostname = "quasar.local"; # Update with your actual hostname/IP
+          fastConnection = true;
+          profiles.system = {
+            sshUser = "root";
+            path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos flake.nixosConfigurations.quasar;
+            user = "root";
+          };
+        };
+      };
+    };
+  in
+    flake
+    // {
+      # Add deploy-rs configuration outside of Snowfall structure
+      deploy = deployConfig;
+
+      # Add deploy-rs checks
+      checks.x86_64-linux = inputs.deploy-rs.lib.x86_64-linux.deployChecks deployConfig;
     };
 }

@@ -1,2 +1,3 @@
 *.code-workspace
 .pre-commit-config.yaml
+result*
