@@ -65,9 +65,6 @@
     # Pre-commit hooks
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Determinate Nix
-    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
   };
 
   outputs = inputs: let
@@ -93,7 +90,6 @@
       systems.modules.nixos = with inputs; [
         home-manager.nixosModules.home-manager
         sops-nix.nixosModules.sops
-        determinate.nixosModules.default
       ];
 
       systems.hosts.andromeda.modules = with inputs; [
