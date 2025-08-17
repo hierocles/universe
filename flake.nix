@@ -65,6 +65,10 @@
     # Pre-commit hooks
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Disko for disk configuration
+    disko.url = "github:nix-community/disko/latest";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs: let
@@ -90,6 +94,7 @@
       systems.modules.nixos = with inputs; [
         home-manager.nixosModules.home-manager
         sops-nix.nixosModules.sops
+        disko.nixosModules.disko
       ];
 
       systems.hosts.andromeda.modules = with inputs; [
