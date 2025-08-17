@@ -22,12 +22,6 @@ with lib.${namespace}; {
         };
       };
     };
-    system = {
-      wsl = {
-        enable = true;
-        default-user = config.${namespace}.user.name;
-      };
-    };
 
     tools = {
       git = enabled;

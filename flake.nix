@@ -102,6 +102,10 @@
         cursor-server.nixosModules.default
       ];
 
+      systems.hosts.quasar.modules = with inputs; [
+        cursor-server.nixosModules.default
+      ];
+
       outputs-builder = channels: {
         inherit (channels.nixpkgs) alejandra;
         checks = {
