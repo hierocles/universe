@@ -69,6 +69,10 @@
     # Disko for disk configuration
     disko.url = "github:nix-community/disko/latest";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    # VPN Confinement for secure torrenting
+    vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
+    vpn-confinement.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs: let
@@ -97,6 +101,7 @@
         disko.nixosModules.disko
         nixos-wsl.nixosModules.wsl
         cursor-server.nixosModules.default
+        vpn-confinement.nixosModules.default
       ];
 
       outputs-builder = channels: {
