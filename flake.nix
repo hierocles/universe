@@ -26,9 +26,6 @@
     darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Hardware
-    nixos-hardware.url = "github:nixos/nixos-hardware";
-
     # GPG
     gpg-base-conf = {
       url = "github:drduh/config";
