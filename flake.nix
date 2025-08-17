@@ -93,6 +93,12 @@
         cursor-server.nixosModules.default
       ];
 
-      outputs-builder = channels: {formatter = channels.nixpkgs.alejandra;};
+      outputs-builder = channels: {
+        formatter = channels.nixpkgs.alejandra;
+        checks = {
+          deadnix = channels.nixpkgs.deadnix;
+          statix = channels.nixpkgs.statix;
+        };
+      };
     };
 }
