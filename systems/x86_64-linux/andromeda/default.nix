@@ -38,6 +38,18 @@ with lib.${namespace}; {
     };
     security = {
       gpg = enabled;
+      sops = {
+        enable = true;
+        defaultSopsFile = ../../secrets/sops.yaml;
+        ageKeyFile = "/etc/sops/age/system.txt";
+        userSecrets = {
+          dylan = {
+            "gpg-public-key" = {
+              mode = "0644";
+            };
+          };
+        };
+      };
     };
   };
 

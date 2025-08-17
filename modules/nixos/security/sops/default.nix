@@ -20,6 +20,11 @@ in {
     gpgKeyPaths = mkOpt (listOf str) [] "The paths to the GPG keys to use for SOPS.";
     validate = mkBoolOpt true "Whether or not to validate the SOPS files. Default: true";
     templates = mkOpt attrs {} "A set of templates to use for SOPS.";
+
+    # Multi-user helpers
+    userSecrets = mkOpt attrs {} "User-specific secrets organized by username.";
+    sharedSecrets = mkOpt attrs {} "Secrets shared between multiple users.";
+    serviceSecrets = mkOpt attrs {} "Secrets for system services.";
   };
 
   config = mkIf cfg.enable {
@@ -52,11 +57,28 @@ in {
     sops = {
       defaultSopsFile = cfg.defaultSopsFile;
       age.sshKeyPaths = mkIf (cfg.ageSshKeyPaths != []) cfg.ageSshKeyPaths;
-      secrets = cfg.secrets;
       age.keyFile = mkIf (cfg.ageKeyFile != null) cfg.ageKeyFile;
       gpg.keyFiles = mkIf (cfg.gpgKeyPaths != []) cfg.gpgKeyPaths;
       validateSopsFiles = mkIf cfg.validate true;
       templates = mkIf (cfg.templates != {}) cfg.templates;
+
+      # Combine all secret types
+      secrets =
+        cfg.secrets
+        // cfg.serviceSecrets
+        // cfg.sharedSecrets
+        // (
+          # Flatten user secrets: users/alice/token -> users/alice/token
+          lib.foldl' (
+            acc: user:
+              acc
+              // (lib.mapAttrs' (
+                  name: value:
+                    lib.nameValuePair "users/${user}/${name}" (value // {owner = user;})
+                )
+                cfg.userSecrets.${user} or {})
+          ) {} (builtins.attrNames cfg.userSecrets)
+        );
     };
   };
 }
