@@ -13,7 +13,7 @@ with lib.${namespace}; let
 in {
   options.${namespace}.security.sops = with types; {
     enable = mkBoolOpt false "Whether or not to enable SOPS for secrets management.";
-    defaultSopsFile = mkOpt (nullOr str) null "The default SOPS file to use for secrets management.";
+    defaultSopsFile = mkOpt (nullOr path) null "The default SOPS file to use for secrets management.";
     ageSshKeyPaths = mkOpt (listOf str) [] "The paths to the SSH keys to use for SOPS.";
     secrets = mkOpt attrs {} "A set of secrets to manage.";
     ageKeyFile = mkOpt (nullOr str) null "The path to the age key file to use for SOPS.";
