@@ -95,14 +95,7 @@
         home-manager.nixosModules.home-manager
         sops-nix.nixosModules.sops
         disko.nixosModules.disko
-      ];
-
-      systems.hosts.andromeda.modules = with inputs; [
         nixos-wsl.nixosModules.wsl
-        cursor-server.nixosModules.default
-      ];
-
-      systems.hosts.quasar.modules = with inputs; [
         cursor-server.nixosModules.default
       ];
 

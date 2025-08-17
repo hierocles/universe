@@ -7,10 +7,6 @@
 }:
 with lib;
 with lib.${namespace}; {
-  imports = [
-    ./hardware-configuration.nix
-  ];
-
   universe = {
     user = {
       enable = true;

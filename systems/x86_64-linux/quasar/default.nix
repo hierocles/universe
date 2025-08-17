@@ -7,6 +7,11 @@
 }:
 with lib;
 with lib.${namespace}; {
+  imports = [
+    ./hardware-configuration.nix
+    ./disks.nix
+  ];
+
   universe = {
     user = {
       name = "dylan";

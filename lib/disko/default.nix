@@ -5,13 +5,6 @@
     "noatime"
     "ssd"
   ];
-  zfsMountOptions = [
-    "defaults"
-    "compress=zstd"
-    "noatime"
-    "relatime"
-    "xattr=sa"
-  ];
 in {
   # Source: https://github.com/nicdumz/nix-config/blob/main/nix/lib/disko/default.nix
   # TODO: there are ways to be smarter here and not repeat ourselves.
@@ -83,18 +76,21 @@ in {
     };
   };
 
-  mkNasZfsPoolDiskLayout = {
-    devices,
-    poolName,
-    raidType ? "raidz1",
+  # Create a striped mirror ZFS pool with multiple vdevs
+  # Each vdev is a mirror of 2 disks, and multiple vdevs are striped together
+  mkStripedMirrorZfsLayout = {
+    vdevs, # List of vdev configurations, each containing 2 devices for mirroring
+    poolName, # Name of the ZFS pool
+    datasetMountpoints, # Mountpoints for datasets
+    datasetOptions ? {}, # Options for datasets
   }: let
-    # Convert devices attrset to list for easier processing
-    deviceList = lib.attrValues devices;
-    deviceNames = lib.attrNames devices;
+    # Flatten all devices from all vdevs into a single list for disk configuration
+    allDevices = lib.flatten (lib.map (vdev: lib.attrValues vdev) vdevs);
 
-    # Create disk configurations dynamically
-    mkDiskConfig = deviceName: device: {
-      "${deviceName}" = {
+    # Create disk configurations for all devices
+    mkDiskConfig = device: {
+      name = lib.getName device;
+      value = {
         inherit device;
         type = "disk";
         content = {
@@ -113,30 +109,32 @@ in {
     };
 
     # Build disk configurations for all devices
-    diskConfigs = lib.mapAttrs' mkDiskConfig devices;
+    diskConfigs = lib.listToAttrs (lib.map mkDiskConfig allDevices);
+
+    # Create datasets configuration
+    datasets =
+      lib.mapAttrs' (name: mountpoint: {
+        type = "zfs_fs";
+        mountpoint = mountpoint;
+      })
+      datasetMountpoints;
+
+    # Build vdev configuration for the pool
+    # Each vdev should be a mirror of 2 devices
+    vdevConfig =
+      lib.map (vdev: {
+        type = "mirror";
+        disks = lib.attrValues vdev;
+      })
+      vdevs;
   in {
     disk = diskConfigs;
     zpool = {
-      "${poolName}" = {
+      ${poolName} = {
         type = "zpool";
-        mode = raidType;
-        rootFsOptions = {
-          compression = "zstd";
-          "com.sun:auto-snapshot" = "false";
-          mountpoint = "none";
-        };
-        datasets = {
-          # Root dataset for the pool
-          "root" = {
-            type = "zfs_fs";
-            mountpoint = "/mnt/${poolName}";
-            options =
-              {
-                mountpoint = "/mnt/${poolName}";
-              }
-              // zfsMountOptions;
-          };
-        };
+        vdevs = vdevConfig;
+        options = datasetOptions;
+        datasets = datasets;
       };
     };
   };
