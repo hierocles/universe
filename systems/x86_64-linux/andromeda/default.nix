@@ -43,9 +43,17 @@ with lib.${namespace}; {
         ageKeyFile = "/etc/sops/age/system.txt";
         userSecrets = {
           dylan = {
-            "gpg-public-key" = {
+            "ssh-public-key" = {
               mode = "0644";
-              path = "/home/dylan/.gnupg/dylan-gpg-public.asc";
+              path = config.${namespace}.home.file.".ssh/id_andromeda.pub".path;
+            };
+            "ssh-private-key" = {
+              mode = "0600";
+              path = config.${namespace}.home.file.".ssh/id_andromeda".path;
+            };
+            "pgp-public-key-fingerprint" = {
+              mode = "0644";
+              path = "/home/dylan/.gnupg/public-key-fingerprint.txt";
             };
           };
         };
