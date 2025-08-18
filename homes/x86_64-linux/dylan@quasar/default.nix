@@ -18,7 +18,14 @@ with lib.${namespace}; {
     };
     tools = {
       git = enabled;
-      direnv = enabled;
+      direnv = {
+        enable = true;
+        config = ''
+          [global]
+          hide_env_diff = true
+          warn_timeout = "60s"
+        '';
+      };
     };
   };
 
