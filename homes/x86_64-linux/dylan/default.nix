@@ -20,7 +20,7 @@ with lib.${namespace}; {
       git = enabled;
       direnv = {
         enable = true;
-        config = ''
+        configTOML = ''
           [global]
           hide_env_diff = true
           warn_timeout = "60s"

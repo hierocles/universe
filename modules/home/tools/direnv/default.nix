@@ -11,7 +11,7 @@ with lib.${namespace}; let
 in {
   options.${namespace}.tools.direnv = with types; {
     enable = mkBoolOpt false "Whether or not to enable direnv.";
-    config = mkOpt (types.nullOr types.str) null "TOML configuration for direnv.";
+    configTOML = mkOpt (types.nullOr types.str) null "TOML configuration for direnv.";
   };
 
   config = mkIf cfg.enable {
@@ -19,7 +19,7 @@ in {
       enable = true;
       nix-direnv = enabled;
       silent = true;
-      config = mkIf (cfg.config != null) cfg.config;
+      config = mkIf (cfg.configTOML != null) cfg.configTOML;
     };
   };
 }
