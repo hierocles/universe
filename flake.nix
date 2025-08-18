@@ -62,7 +62,6 @@
     # Secret repo, contains secrets that don't need to be encrypted
     variables = {
       url = "git+ssh://git@github.com/hierocles/snowfall-secrets?ref=main&shallow=1";
-      flake = false;
     };
   };
 
