@@ -2,7 +2,7 @@
   lib,
   namespace,
   config,
-  secretsConfig ? {},
+  inputs,
   ...
 }:
 with lib;
@@ -27,8 +27,6 @@ with lib.${namespace}; {
         };
       };
     };
-
-    secrets-config = enabled;
 
     # Deployment configuration (used by deploy-rs)
     deployment = {
@@ -93,7 +91,7 @@ with lib.${namespace}; {
         ];
         openVPNPorts = [
           {
-            port = secretsConfig.vpn.peer-port;
+            port = inputs.variables.vpn.peer-port;
             protocol = "both";
           }
         ];
@@ -105,7 +103,7 @@ with lib.${namespace}; {
         downloadDir = "/mnt/media/downloads/completed";
         incompleteDir = "/mnt/media/downloads/incomplete";
         watchDir = "/mnt/media/downloads/watch";
-        peerPort = secretsConfig.vpn.peer-port;
+        peerPort = inputs.variables.vpn.peer-port;
         authentication = {
           enable = true;
           credentialsFile = config.sops.secrets."transmission-rpc-credentials".path;
