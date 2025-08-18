@@ -91,7 +91,7 @@ with lib.${namespace}; {
         ];
         openVPNPorts = [
           {
-            port = inputs.variables.vpn.peer-port;
+            port = 51413; # Transmission peer port
             protocol = "both";
           }
         ];
@@ -103,7 +103,7 @@ with lib.${namespace}; {
         downloadDir = "/mnt/media/downloads/completed";
         incompleteDir = "/mnt/media/downloads/incomplete";
         watchDir = "/mnt/media/downloads/watch";
-        peerPort = inputs.variables.vpn.peer-port;
+        peerPort = 51413; # Transmission peer port
         authentication = {
           enable = true;
           credentialsFile = config.sops.secrets."transmission-rpc-credentials".path;

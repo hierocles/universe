@@ -17,9 +17,9 @@ in {
   config = mkIf cfg.enable {
     programs.direnv = {
       enable = true;
-      nix-direnv = enabled;
+      nix-direnv.enable = true;
       silent = true;
-      config = mkIf (cfg.configTOML != null) cfg.configTOML;
+      config = mkForce (mkIf (cfg.configTOML != null) cfg.configTOML);
     };
   };
 }
