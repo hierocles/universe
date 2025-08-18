@@ -102,7 +102,7 @@
       };
 
       outputs-builder = channels: let
-        system = channels.nixpkgs.system;
+        inherit (channels.nixpkgs) system;
       in {
         inherit (channels.nixpkgs) alejandra;
 
@@ -163,6 +163,9 @@
             sshUser = "dylan"; # Updated to use your user account
             path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos flake.nixosConfigurations.quasar;
             user = "root"; # This is still root for system activation
+            specialArgs = {
+              inherit (inputs) secrets-repo;
+            };
           };
         };
       };

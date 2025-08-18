@@ -17,6 +17,11 @@ in {
     programs.direnv = {
       enable = true;
       nix-direnv = enabled;
+      silent = true;
+      settings = {
+        hide_env_diff = true;
+        warn_timeout = "60s";
+      };
     };
   };
 }

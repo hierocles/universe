@@ -94,13 +94,6 @@ in {
       (lib.optionals config.${namespace}.services.radarr.enable [
         "d ${cfg.moviesPath} 0755 ${cfg.user} ${cfg.group} -"
       ])
-      # Future implementations
-      # (lib.optionals config.${namespace}.services.lidarr.enable [
-      #   "d ${cfg.musicPath} 0755 ${cfg.user} ${cfg.group} -"
-      # ])
-      # (lib.optionals config.${namespace}.services.readarr.enable [
-      #   "d ${cfg.booksPath} 0755 ${cfg.user} ${cfg.group} -"
-      # ])
     ];
 
     # Open firewall ports only for enabled services
@@ -114,9 +107,6 @@ in {
       (lib.optionals config.${namespace}.services.plex.enable [32400]) # Plex
       (lib.optionals config.${namespace}.services.jellyfin.enable [8096]) # Jellyfin
       (lib.optionals config.${namespace}.services.torrent.enable [9091]) # Transmission
-      # Note: Lidarr and Readarr ports kept for future implementation
-      # (lib.optionals config.${namespace}.services.lidarr.enable [ 8686 ])    # Lidarr
-      # (lib.optionals config.${namespace}.services.readarr.enable [ 8787 ])   # Readarr
     ];
 
     networking.firewall.allowedUDPPorts = lib.flatten [

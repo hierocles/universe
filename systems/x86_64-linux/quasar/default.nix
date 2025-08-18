@@ -2,6 +2,7 @@
   lib,
   namespace,
   config,
+  secretsConfig ? {},
   ...
 }:
 with lib;
@@ -26,6 +27,8 @@ with lib.${namespace}; {
         };
       };
     };
+
+    secrets-config = enabled;
 
     # Deployment configuration (used by deploy-rs)
     deployment = {
@@ -69,11 +72,11 @@ with lib.${namespace}; {
       radarr = enabled; # Movie management
       prowlarr = enabled; # Indexer management
       bazarr = enabled; # Subtitle management
-      jellyseerr = enabled; # Request management (Jellyfin-focused)
+      jellyseerr = enabled; # Request management
 
       # Media servers (choose one or both)
-      plex = disabled; # Commercial media server with premium features
-      jellyfin = enabled; # Open source media server
+      plex = enabled; # Commercial media server with premium features
+      jellyfin = disabled; # Open source media server
 
       # VPN and Torrenting (configure wireguardConfigFile path)
       vpn = {
@@ -83,29 +86,26 @@ with lib.${namespace}; {
         accessibleFrom = ["192.168.0.0/16" "10.0.0.0/8"];
         portMappings = [
           {
-            from = 9091;
+            from = 9091; # Transmission RPC port
             to = 9091;
             protocol = "tcp";
           }
         ];
         openVPNPorts = [
           {
-            port = 51413;
+            port = secretsConfig.vpn.peer-port;
             protocol = "both";
           }
         ];
       };
 
-      # Configure torrent client with authentication from SOPS secrets
       torrent = {
         enable = true;
         useVPN = true;
         downloadDir = "/mnt/media/downloads/completed";
         incompleteDir = "/mnt/media/downloads/incomplete";
         watchDir = "/mnt/media/downloads/watch";
-        peerPort = 6093;
-
-        # Enable authentication using the credentials file
+        peerPort = secretsConfig.vpn.peer-port;
         authentication = {
           enable = true;
           credentialsFile = config.sops.secrets."transmission-rpc-credentials".path;
@@ -116,8 +116,8 @@ with lib.${namespace}; {
       nginx = {
         enable = true;
         domain = "quasar.local";
-        ssl = false; # Set to true and enable acme for production
-        acme = false;
+        ssl = true;
+        acme = true;
         openFirewall = true;
       };
     };
@@ -145,15 +145,15 @@ with lib.${namespace}; {
           dylan = {
             "ssh-public-key" = {
               mode = "0644";
-              path = config.${namespace}.home.file.".ssh/id_andromeda.pub".path;
+              path = "/home/dylan/.ssh/id_andromeda.pub";
             };
             "ssh-private-key" = {
               mode = "0600";
-              path = config.${namespace}.home.file.".ssh/id_andromeda".path;
+              path = "/home/dylan/.ssh/id_andromeda";
             };
             "pgp-public-key-fingerprint" = {
               mode = "0644";
-              path = config.${namespace}.home.file.".gnupg/public-key-fingerprint.txt".path;
+              path = "/home/dylan/.gnupg/public-key-fingerprint.txt";
             };
           };
         };

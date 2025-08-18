@@ -39,21 +39,21 @@ with lib.${namespace}; {
       gpg = enabled;
       sops = {
         enable = true;
-        defaultSopsFile = ../../../secrets/sops.yaml;
+        defaultSopsFile = ../../../secrets/secrets.yaml;
         ageKeyFile = "/etc/sops/age/system.txt";
         userSecrets = {
           dylan = {
             "ssh-public-key" = {
               mode = "0644";
-              path = config.${namespace}.home.file.".ssh/id_andromeda.pub".path;
+              path = "/home/dylan/.ssh/id_andromeda.pub";
             };
             "ssh-private-key" = {
               mode = "0600";
-              path = config.${namespace}.home.file.".ssh/id_andromeda".path;
+              path = "/home/dylan/.ssh/id_andromeda";
             };
             "pgp-public-key-fingerprint" = {
               mode = "0644";
-              path = config.${namespace}.home.file.".gnupg/public-key-fingerprint.txt".path;
+              path = "/home/dylan/.gnupg/public-key-fingerprint.txt";
             };
           };
         };

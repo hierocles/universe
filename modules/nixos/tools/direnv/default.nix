@@ -18,6 +18,7 @@ in {
       programs.direnv = {
         enable = true;
         nix-direnv = enabled;
+        silent = true;
       };
     };
   };

@@ -54,13 +54,13 @@ in {
         // cfg.serviceSecrets
         // cfg.sharedSecrets
         // (
-          # Flatten user secrets: users/alice/token -> users/alice/token
+          # Flatten user secrets: dylan.token -> dylan/token
           lib.foldl' (
             acc: user:
               acc
               // (lib.mapAttrs' (
                   name: value:
-                    lib.nameValuePair "users/${user}/${name}" (value // {owner = user;})
+                    lib.nameValuePair "${user}/${name}" (value // {owner = user;})
                 )
                 cfg.userSecrets.${user} or {})
           ) {} (builtins.attrNames cfg.userSecrets)
