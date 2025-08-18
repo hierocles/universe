@@ -150,7 +150,7 @@ with lib.${namespace}; {
             };
             "pgp-public-key-fingerprint" = {
               mode = "0644";
-              path = "/home/dylan/.gnupg/public-key-fingerprint.txt";
+              path = config.${namespace}.home.file.".gnupg/public-key-fingerprint.txt".path;
             };
           };
         };
