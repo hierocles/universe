@@ -103,12 +103,12 @@ with lib.${namespace}; {
         downloadDir = "/mnt/media/downloads/completed";
         incompleteDir = "/mnt/media/downloads/incomplete";
         watchDir = "/mnt/media/downloads/watch";
+        peerPort = 6093;
 
-        # Enable authentication using the secret files
+        # Enable authentication using the credentials file
         authentication = {
           enable = true;
-          usernameFile = config.sops.secrets."transmission-rpc-username".path;
-          passwordFile = config.sops.secrets."transmission-rpc-password".path;
+          credentialsFile = config.sops.secrets."transmission-rpc-credentials".path;
         };
       };
 
@@ -130,8 +130,11 @@ with lib.${namespace}; {
         ageKeyFile = "/etc/sops/age/system.txt";
 
         secrets = {
-          "transmission-rpc-username" = {};
-          "transmission-rpc-password" = {};
+          "transmission-rpc-credentials" = {
+            owner = "arr";
+            group = "arr";
+            mode = "0600";
+          };
           "wg-conf" = {
             mode = "0600";
             path = "/etc/wireguard/wg0.conf";

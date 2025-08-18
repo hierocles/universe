@@ -452,6 +452,7 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_2",
         "pre-commit-hooks": "pre-commit-hooks",
+        "secrets-repo": "secrets-repo",
         "snowfall-lib": "snowfall-lib",
         "sops-nix": "sops-nix",
         "vpn-confinement": "vpn-confinement"
@@ -472,6 +473,24 @@
         "ref": "nightly",
         "repo": "rust-analyzer",
         "type": "github"
+      }
+    },
+    "secrets-repo": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1755482474,
+        "narHash": "sha256-SJy84S/XIBJwUafrhyxyRxSBtvEgI2XisweRt0gdYfA=",
+        "ref": "main",
+        "rev": "b082a57ad1a23096199605b21325e4cd0fd3068c",
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://git@github.com/hierocles/snowfall-secrets"
+      },
+      "original": {
+        "ref": "main",
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://git@github.com/hierocles/snowfall-secrets"
       }
     },
     "snowfall-lib": {

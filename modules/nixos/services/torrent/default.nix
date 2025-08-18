@@ -84,43 +84,17 @@ in {
       description = "Extra settings for the torrent client.";
     };
 
-    # New options for authentication
+    # Authentication options
     authentication = {
       enable = mkBoolOpt false "Whether to enable authentication for the torrent client.";
 
-      usernameFile = mkOption {
+      # Option for credentials file (preferred method)
+      credentialsFile = mkOption {
         type = nullOr str;
         default = null;
-        description = "Path to a file containing the username for authentication.";
-        example = "/run/secrets/transmission-username";
+        description = "Path to a JSON file containing credentials for authentication.";
+        example = "/run/secrets/transmission-credentials";
       };
-
-      passwordFile = mkOption {
-        type = nullOr str;
-        default = null;
-        description = "Path to a file containing the password for authentication.";
-        example = "/run/secrets/transmission-password";
-      };
-
-      username = mkOption {
-        type = nullOr str;
-        default = null;
-        description = "Username for authentication (not recommended, use usernameFile instead).";
-      };
-
-      password = mkOption {
-        type = nullOr str;
-        default = null;
-        description = "Password for authentication (not recommended, use passwordFile instead).";
-      };
-    };
-
-    # Option for custom settings file
-    settingsFile = mkOption {
-      type = nullOr str;
-      default = null;
-      description = "Path to a custom settings file for the torrent client.";
-      example = "/run/secrets/transmission-settings.json";
     };
   };
 
@@ -135,10 +109,10 @@ in {
 
       home = "${arrCfg.configPath}/transmission";
 
-      # Use custom settings file if provided
-      inherit (cfg) settingsFile;
+      # Use credentials file if provided
+      credentialsFile = mkIf cfg.authentication.enable cfg.authentication.credentialsFile;
 
-      settings = mkIf (cfg.settingsFile == null) (mkMerge [
+      settings = mkMerge [
         {
           # Directory settings
           "download-dir" = cfg.downloadDir;
@@ -175,56 +149,14 @@ in {
           "blocklist-enabled" = true;
           "blocklist-url" = "https://github.com/Naunter/BT_BlockLists/raw/master/bt_blocklists.gz";
 
-          # Web interface settings
-          "rpc-authentication-required" = cfg.authentication.enable;
+          # Web interface settings - enable authentication if credentialsFile is provided
+          "rpc-authentication-required" =
+            cfg.authentication.enable
+            && cfg.authentication.credentialsFile != null;
         }
-        (mkIf (cfg.authentication.enable && cfg.authentication.username != null) {
-          "rpc-username" = cfg.authentication.username;
-        })
-        (mkIf (cfg.authentication.enable && cfg.authentication.password != null) {
-          "rpc-password" = cfg.authentication.password;
-        })
         cfg.extraSettings
-      ]);
+      ];
     };
-
-    # Add a systemd service to apply authentication from files if needed
-    systemd.services.transmission-auth =
-      mkIf (
-        cfg.authentication.enable
-        && (cfg.authentication.usernameFile != null || cfg.authentication.passwordFile != null)
-      ) {
-        description = "Apply Transmission authentication settings from files";
-        wantedBy = ["multi-user.target"];
-        after = ["transmission.service"];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-        };
-        script = ''
-          # Get the Transmission settings file
-          SETTINGS_FILE="/var/lib/transmission/settings.json"
-
-          # Wait for the settings file to be created by Transmission
-          while [ ! -f "$SETTINGS_FILE" ]; do
-            sleep 1
-          done
-
-          # Update the settings file with authentication settings
-          ${optionalString (cfg.authentication.usernameFile != null) ''
-            USERNAME=$(cat ${cfg.authentication.usernameFile})
-            sed -i 's/"rpc-username": ".*"/"rpc-username": "'$USERNAME'"/' "$SETTINGS_FILE"
-          ''}
-
-          ${optionalString (cfg.authentication.passwordFile != null) ''
-            PASSWORD=$(cat ${cfg.authentication.passwordFile})
-            sed -i 's/"rpc-password": ".*"/"rpc-password": "'$PASSWORD'"/' "$SETTINGS_FILE"
-          ''}
-
-          # Restart Transmission to apply the settings
-          systemctl restart transmission
-        '';
-      };
 
     # VPN Confinement for Transmission
     systemd.services.transmission.vpnConfinement = mkIf cfg.useVPN {

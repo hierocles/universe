@@ -58,6 +58,12 @@
 
     # VPN Confinement for secure torrenting
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
+
+    # Secrets repo
+    secrets-repo = {
+      url = "git+ssh://git@github.com/hierocles/snowfall-secrets?ref=main&shallow=1";
+      flake = false;
+    };
   };
 
   outputs = inputs: let
@@ -113,11 +119,24 @@
 
         devShells.default = channels.nixpkgs.mkShell {
           buildInputs = with channels.nixpkgs; [
+            git
+            sops
+            age
+          ];
+
+          shellHook = ''
+            echo "🚀 NixOS Development Environment"
+            echo "Available tools:"
+            echo "  • sops       - Edit secrets"
+          '';
+        };
+
+        devShells.deploy = channels.nixpkgs.mkShell {
+          buildInputs = with channels.nixpkgs; [
+            git
             inputs.deploy-rs.packages.${system}.default
             sops
             age
-            nixos-rebuild
-            alejandra
           ];
 
           shellHook = ''
