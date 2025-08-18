@@ -138,12 +138,12 @@
     deployConfig = {
       nodes = {
         quasar = {
-          hostname = "quasar.local"; # Update with your actual hostname/IP
+          hostname = "192.168.8.115"; # Updated with your actual IP
           fastConnection = true;
           profiles.system = {
-            sshUser = "root";
+            sshUser = "dylan"; # Updated to use your user account
             path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos flake.nixosConfigurations.quasar;
-            user = "root";
+            user = "root"; # This is still root for system activation
           };
         };
       };

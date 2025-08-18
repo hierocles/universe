@@ -1,6 +1,7 @@
 {
   lib,
   namespace,
+  config,
   ...
 }:
 with lib;
@@ -29,10 +30,10 @@ with lib.${namespace}; {
     # Deployment configuration (used by deploy-rs)
     deployment = {
       enable = true;
-      hostname = "quasar.local"; # Update with actual hostname/IP
+      hostname = "192.168.8.115"; # Updated with your actual IP
       fastConnection = true;
-      sshUser = "root";
-      user = "root";
+      sshUser = "dylan"; # Updated to use your user account
+      user = "root"; # This is still root for system activation
     };
 
     system = {
@@ -78,7 +79,7 @@ with lib.${namespace}; {
       vpn = {
         enable = true;
         namespaceName = "torrent";
-        wireguardConfigFile = "/etc/wireguard/wg0.conf"; # Update this path
+        wireguardConfigFile = config.sops.secrets.wg-conf.path;
         accessibleFrom = ["192.168.0.0/16" "10.0.0.0/8"];
         portMappings = [
           {
@@ -95,17 +96,19 @@ with lib.${namespace}; {
         ];
       };
 
+      # Configure torrent client with authentication from SOPS secrets
       torrent = {
         enable = true;
         useVPN = true;
         downloadDir = "/mnt/media/downloads/completed";
         incompleteDir = "/mnt/media/downloads/incomplete";
         watchDir = "/mnt/media/downloads/watch";
-        extraSettings = {
-          # Optional: Enable authentication
-          # "rpc-authentication-required" = true;
-          # "rpc-username" = "transmission";
-          # "rpc-password" = "your-password-here";
+
+        # Enable authentication using the secret files
+        authentication = {
+          enable = true;
+          usernameFile = config.sops.secrets."transmission-rpc-username".path;
+          passwordFile = config.sops.secrets."transmission-rpc-password".path;
         };
       };
 
@@ -123,13 +126,31 @@ with lib.${namespace}; {
       gpg = enabled;
       sops = {
         enable = true;
-        defaultSopsFile = ../../../secrets/sops.yaml;
+        defaultSopsFile = ../../../secrets/secrets.yaml;
         ageKeyFile = "/etc/sops/age/system.txt";
+
+        secrets = {
+          "transmission-rpc-username" = {};
+          "transmission-rpc-password" = {};
+          "wg-conf" = {
+            mode = "0600";
+            path = "/etc/wireguard/wg0.conf";
+          };
+        };
+
         userSecrets = {
           dylan = {
-            "gpg-public-key" = {
+            "ssh-public-key" = {
               mode = "0644";
-              path = "/home/dylan/.gnupg/dylan-gpg-public.asc";
+              path = config.${namespace}.home.file.".ssh/id_andromeda.pub".path;
+            };
+            "ssh-private-key" = {
+              mode = "0600";
+              path = config.${namespace}.home.file.".ssh/id_andromeda".path;
+            };
+            "pgp-public-key-fingerprint" = {
+              mode = "0644";
+              path = "/home/dylan/.gnupg/public-key-fingerprint.txt";
             };
           };
         };
