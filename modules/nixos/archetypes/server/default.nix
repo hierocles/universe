@@ -22,7 +22,7 @@ in {
       system = {
         zfs = {
           enable = true;
-          hostId = cfg.hostId;
+          inherit (cfg) hostId;
         };
       };
       services = {

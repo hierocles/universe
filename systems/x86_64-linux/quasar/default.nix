@@ -27,17 +27,6 @@ with lib.${namespace}; {
       };
     };
 
-    # Deployment configuration (used by deploy-rs)
-    /*
-      deployment = {
-      enable = true;
-      hostname = "192.168.8.115"; # Updated with your actual IP
-      fastConnection = true;
-      sshUser = "dylan"; # Updated to use your user account
-      user = "root"; # This is still root for system activation
-    };
-    */
-
     suites = {
       common = enabled;
     };

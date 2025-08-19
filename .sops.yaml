@@ -1,6 +1,6 @@
 # .sops.yaml
 keys:
-  - &age_system age1peu6de95zw2u3mzw6hkm5ld95w4xx0vvvvsrj3f2edflz5st23hqylyhxh
+  - &age_system age1alh6wlt64qlhzrznj0k6gtp3u8xezvytml2ah4gmceurjvtshstq2h9l8t
   - &age_dylan age1alh6wlt64qlhzrznj0k6gtp3u8xezvytml2ah4gmceurjvtshstq2h9l8t
 
 creation_rules:

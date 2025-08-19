@@ -115,7 +115,17 @@
         disko.nixosModules.disko
       ];
 
-      deploy = lib.mkDeploy {inherit (inputs) self;};
+      deploy = lib.mkDeploy {
+        inherit (inputs) self;
+        overrides = {
+          quasar = {
+            hostname = "192.168.8.115";
+            profiles.system = {
+              fastConnection = true;
+            };
+          };
+        };
+      };
 
       checks =
         builtins.mapAttrs

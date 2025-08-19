@@ -1,16 +1,13 @@
 {
   lib,
-  pkgs,
   config,
-  osConfig ? {},
-  format ? "unknown",
   ...
 }:
 with lib.universe; {
   universe = {
     user = {
       enable = true;
-      name = config.snowfallorg.user.name;
+      inherit (config.snowfallorg.user) name;
     };
 
     cli = {

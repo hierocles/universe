@@ -11,7 +11,6 @@ with lib.universe; let
   cfg = config.universe.services.openssh;
 
   user = config.users.users.${config.universe.user.name};
-  user-id = builtins.toString user.uid;
 
   name = host; # Use the provided hostname or default if not specified.
 
@@ -26,8 +25,6 @@ with lib.universe; let
   other-hosts-config = lib.concatMapStringsSep "\n" (name: let
     remote = other-hosts.${name};
     remote-user-name = remote.config.universe.user.name;
-    remote-user-id =
-      builtins.toString remote.config.users.users.${remote-user-name}.uid;
     # forward-gpg = optionalString
     #   (config.programs.gnupg.agent.enable
     #     && remote.config.programs.gnupg.agent.enable) ''

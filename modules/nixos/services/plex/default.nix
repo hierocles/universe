@@ -59,6 +59,7 @@ in {
 
     services.plex = {
       enable = true;
+      #package = channels.nixpkgs.plexRaw;
       inherit (cfg) dataDir user group openFirewall accelerationDevices extraPlugins;
     };
 

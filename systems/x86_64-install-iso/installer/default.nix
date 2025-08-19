@@ -1,20 +1,6 @@
-{
-  pkgs,
-  inputs,
-  lib,
-  nixos-hardware,
-  nixosModules,
-  ...
-}:
+{lib, ...}:
 with lib;
-with lib.universe; let
-  newUser = name: {
-    isNormalUser = true;
-    createHome = true;
-    home = "/home/${name}";
-    shell = pkgs.zsh;
-  };
-in {
+with lib.universe; {
   home-manager.users.nixos.snowfallorg.user.name = "nixos";
   # boot.loader.grub = enabled;
 
