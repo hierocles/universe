@@ -41,7 +41,6 @@ in {
 
     environment.systemPackages = with pkgs; [
       universe.nixos-revision
-      deploy-rs
       nix-prefetch-git
       nix-index
       nix-output-monitor
@@ -57,7 +56,7 @@ in {
       inherit (cfg) package;
 
       settings = {
-        experimental-features = "nix-command flakes";
+        experimental-features = ["nix-command" "flakes"];
         http-connections = 50;
         warn-dirty = false;
         log-lines = 50;

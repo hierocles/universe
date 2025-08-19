@@ -1,7 +1,7 @@
 {
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # WSL
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
@@ -11,6 +11,14 @@
       url = "github:snowfallorg/lib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Snowfall Flake
+    flake.url = "github:snowfallorg/flake";
+    flake.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Generate System Images
+    nixos-generators.url = "github:nix-community/nixos-generators";
+    nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
 
     # Cursor Server for remote development
     cursor-server = {
@@ -59,6 +67,12 @@
     # VPN Confinement for secure torrenting
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
 
+    nix-output-monitor.url = "github:maralorn/nix-output-monitor";
+    nix-output-monitor.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-topology.url = "github:oddlama/nix-topology";
+    nix-topology.inputs.nixpkgs.follows = "nixpkgs";
+
     # Secret repo, contains secrets that don't need to be encrypted
     variables = {
       url = "git+ssh://git@github.com/hierocles/snowfall-secrets?ref=main&shallow=1";
@@ -67,8 +81,8 @@
   };
 
   outputs = inputs: let
+    inherit (inputs) deploy-rs;
     lib = inputs.snowfall-lib.mkLib {
-      inherit inputs;
       src = ./.;
 
       snowfall = {
@@ -79,104 +93,41 @@
         };
       };
     };
-
-    # Create the flake first so we can reference it
-    flake = lib.mkFlake {
+  in
+    lib.mkFlake {
       channels-config = {
         allowUnfree = true;
       };
 
+      overlays = [];
+
       systems.modules.nixos = with inputs; [
         home-manager.nixosModules.home-manager
+        nix-ld.nixosModules.nix-ld
+        nix-topology.nixosModules.default
         sops-nix.nixosModules.sops
-        disko.nixosModules.disko
-        nixos-wsl.nixosModules.wsl
-        cursor-server.nixosModules.default
-        vpn-confinement.nixosModules.default
       ];
 
-      # Define system specialArgs
-      systems.specialArgs = {
-        # Pass the disko module to system configurations
-        inherit (inputs) disko;
-      };
+      systems.andromeda.modules.nixos = with inputs; [
+        nixos-wsl.nixosModules.wsl
+      ];
 
-      outputs-builder = channels: let
-        inherit (channels.nixpkgs) system;
-      in {
-        inherit (channels.nixpkgs) alejandra;
+      deploy = lib.mkDeploy {inherit (inputs) self;};
 
-        checks = {
-          inherit (channels.nixpkgs) deadnix statix;
-          pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              deadnix.enable = true;
-              statix.enable = true;
-            };
-          };
-        };
+      checks =
+        builtins.mapAttrs
+        (_system: deploy-lib: deploy-lib.deployChecks inputs.self.deploy)
+        deploy-rs.lib;
 
-        devShells.default = channels.nixpkgs.mkShell {
-          buildInputs = with channels.nixpkgs; [
-            git
-            sops
-            age
-          ];
-
-          shellHook = ''
-            echo "🚀 NixOS Development Environment"
-            echo "Available tools:"
-            echo "  • sops       - Edit secrets"
-          '';
-        };
-
-        devShells.deploy = channels.nixpkgs.mkShell {
-          buildInputs = with channels.nixpkgs; [
-            git
-            inputs.deploy-rs.packages.${system}.default
-            sops
-            age
-          ];
-
-          shellHook = ''
-            echo "🚀 NixOS Deployment Environment"
-            echo "Available tools:"
-            echo "  • deploy     - Deploy configurations with deploy-rs"
-            echo "  • sops       - Edit secrets"
-            echo "  • nixos-rebuild - Test configurations locally"
-            echo ""
-            echo "Usage examples:"
-            echo "  deploy .#quasar           - Deploy to quasar system"
-          '';
-        };
-      };
-    };
-
-    # Define deploy-rs configuration using the flake we just created
-    deployConfig = {
-      nodes = {
-        quasar = {
-          hostname = "192.168.8.115"; # Updated with your actual IP
-          fastConnection = true;
-          profiles.system = {
-            sshUser = "dylan"; # Updated to use your user account
-            path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos flake.nixosConfigurations.quasar;
-            user = "root"; # This is still root for system activation
-            specialArgs = {
-              inherit (inputs) variables;
-            };
+      outputs-builder = channels: {
+        hooks.pre-commit-check = inputs.pre-commit-hooks.lib.${channels.nixpkgs.system}.run {
+          src = ./.;
+          hooks = {
+            alejandra.enable = true;
+            deadnix.enable = true;
+            statix.enable = true;
           };
         };
       };
-    };
-  in
-    flake
-    // {
-      # Add deploy-rs configuration outside of Snowfall structure
-      deploy = deployConfig;
-
-      # Add deploy-rs checks
-      checks.x86_64-linux = inputs.deploy-rs.lib.x86_64-linux.deployChecks deployConfig;
     };
 }

@@ -2,7 +2,6 @@
   lib,
   namespace,
   config,
-  inputs,
   ...
 }:
 with lib;
