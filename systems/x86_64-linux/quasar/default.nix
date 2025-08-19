@@ -28,29 +28,32 @@ with lib.${namespace}; {
     };
 
     # Deployment configuration (used by deploy-rs)
-    deployment = {
+    /*
+      deployment = {
       enable = true;
       hostname = "192.168.8.115"; # Updated with your actual IP
       fastConnection = true;
       sshUser = "dylan"; # Updated to use your user account
       user = "root"; # This is still root for system activation
     };
+    */
+
+    suites = {
+      common = enabled;
+    };
 
     system = {
       boot = {
         enable = true;
-        loader = "systemd-boot";
         efi = true;
       };
-      networking = {
+      zfs = {
         enable = true;
-        hostId = "8425e349"; # Required for ZFS
+        hostId = "01749328"; # Required for ZFS
       };
     };
 
     tools = {
-      git = enabled;
-      comma = enabled;
       nix-ld = enabled; # Required for cursor-server
       nil = enabled;
       cursor-server = enabled;

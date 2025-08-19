@@ -13,8 +13,8 @@
     };
 
     # Snowfall Flake
-    flake.url = "github:snowfallorg/flake";
-    flake.inputs.nixpkgs.follows = "nixpkgs";
+    snowfall-flake.url = "github:snowfallorg/flake";
+    snowfall-flake.inputs.nixpkgs.follows = "nixpkgs";
 
     # Generate System Images
     nixos-generators.url = "github:nix-community/nixos-generators";
@@ -83,6 +83,7 @@
   outputs = inputs: let
     inherit (inputs) deploy-rs;
     lib = inputs.snowfall-lib.mkLib {
+      inherit inputs;
       src = ./.;
 
       snowfall = {
@@ -99,17 +100,19 @@
         allowUnfree = true;
       };
 
-      overlays = [];
+      overlays = with inputs; [
+        snowfall-flake.overlays."package/flake"
+      ];
 
       systems.modules.nixos = with inputs; [
         home-manager.nixosModules.home-manager
-        nix-ld.nixosModules.nix-ld
+        #nix-ld.nixosModules.nix-ld
         nix-topology.nixosModules.default
         sops-nix.nixosModules.sops
-      ];
-
-      systems.andromeda.modules.nixos = with inputs; [
+        cursor-server.nixosModules.default
+        vpn-confinement.nixosModules.default
         nixos-wsl.nixosModules.wsl
+        disko.nixosModules.disko
       ];
 
       deploy = lib.mkDeploy {inherit (inputs) self;};

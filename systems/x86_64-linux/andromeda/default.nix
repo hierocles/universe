@@ -21,6 +21,9 @@ with lib.${namespace}; {
         };
       };
     };
+    suites = {
+      common = enabled;
+    };
     system = {
       wsl = {
         enable = true;
@@ -29,9 +32,6 @@ with lib.${namespace}; {
     };
 
     tools = {
-      git = enabled;
-      comma = enabled;
-      nix-ld = enabled; # Required for cursor-server
       nil = enabled;
       cursor-server = enabled;
     };

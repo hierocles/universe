@@ -32,7 +32,7 @@ in {
 
   config = {
     home.sessionVariables = {
-      EDITOR = "${pkgs.neovim}/bin/nvim";
+      EDITOR = "nvim";
       XDG_CONFIG_HOME = "${home-directory}/.config";
       XDG_DATA_HOME = "${home-directory}/.local/share";
       XDG_BIN_HOME = "$HOME/.local/bin";

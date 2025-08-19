@@ -15,6 +15,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [output-monitor];
+    environment.systemPackages = with pkgs; [nix-output-monitor];
   };
 }

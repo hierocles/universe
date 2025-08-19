@@ -7,9 +7,9 @@
 }: let
   inherit (lib) mkEnableOption mkIf;
 
-  cfg = config.${namespace}.cli-apps.neovim;
+  cfg = config.${namespace}.cli.neovim;
 in {
-  options.${namespace}.cli-apps.neovim = {
+  options.${namespace}.cli.neovim = {
     enable = mkEnableOption "Neovim";
   };
 
@@ -19,33 +19,18 @@ in {
       defaultEditor = true;
       viAlias = true;
       vimAlias = true;
-      withNodeJs = true;
-      withPython3 = true;
-      withRuby = true;
     };
 
     # Additional packages
     home.packages = with pkgs; [
       # LSP servers
       nil # Nix LSP
-      rust-analyzer
-      typescript-language-server
-      lua-language-server
-      bash-language-server
 
       # Formatters
       alejandra # Nix formatter
-      rustfmt
-      prettier
-      stylua
-      shfmt
 
       # Linters
       statix # Nix linter
-      clippy
-      eslint_d
-      luacheck
-      shellcheck
 
       # Tree-sitter
       tree-sitter
@@ -60,9 +45,6 @@ in {
 
     # Session variables
     home.sessionVariables = {
-      PAGER = "less";
-      MANPAGER = "less";
-      NPM_CONFIG_PREFIX = "$HOME/.npm-global";
       EDITOR = "nvim";
       VISUAL = "nvim";
     };
@@ -264,17 +246,6 @@ in {
               -- Nix LSP
               lspconfig.nil_ls.setup({})
 
-              -- Rust LSP
-              lspconfig.rust_analyzer.setup({})
-
-              -- TypeScript LSP
-              lspconfig.tsserver.setup({})
-
-              -- Lua LSP
-              lspconfig.lua_ls.setup({})
-
-              -- Bash LSP
-              lspconfig.bashls.setup({})
             end,
           },
 

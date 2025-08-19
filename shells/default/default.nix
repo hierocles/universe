@@ -11,17 +11,17 @@ with lib.universe; let
   inherit (inputs.self.hooks.${system}.pre-commit-check) shellHook;
 in
   mkShell {
-    buildInputs =
+    buildInputs = with pkgs;
       [
-        pkgs.deadnix
-        pkgs.statix
-        pkgs.alejandra
-        pkgs.nix-diff
-        pkgs.nix-index
-        pkgs.nix-prefetch-git
-        pkgs.snowfallorg.flake
-        pkgs.statix
-        pkgs.zsh
+        deadnix
+        statix
+        alejandra
+        nix-diff
+        nix-index
+        nix-prefetch-git
+        snowfallorg.flake
+        statix
+        zsh
       ]
       ++ inputs.self.hooks.${system}.pre-commit-check.enabledPackages;
 

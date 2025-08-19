@@ -16,7 +16,7 @@ in {
   config = mkIf cfg.enable {
     boot.supportedFilesystems = ["zfs"];
     services.zfs.autoScrub.enable = true;
-    boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+    #boot.kernelPackages = config.boot.zfs.package.linuxPackages_6_15;
     networking.hostId = cfg.hostId;
     services.zfs.autoSnapshot = {enable = true;};
   };

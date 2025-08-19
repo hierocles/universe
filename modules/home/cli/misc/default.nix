@@ -14,7 +14,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    campground.cli.aliases = {
+    universe.cli.aliases = {
       ls = "${pkgs.lsd}/bin/lsd --group-dirs first $@";
       la = "${pkgs.lsd}/bin/lsd -laF --group-dirs first $@";
       lt = "${pkgs.lsd}/bin/lsd --tree --depth 3 $@";

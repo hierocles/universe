@@ -17,8 +17,6 @@ in {
         openssh = enabled;
       };
       cli = {
-        aliases = enabled;
-        env = enabled;
         flake = enabled;
         misc = enabled;
         neovim = enabled;

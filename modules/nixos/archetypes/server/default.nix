@@ -17,7 +17,7 @@ in {
     universe = {
       suites = {
         common = enabled;
-        observability = enabled;
+        #observability = enabled;
       };
       system = {
         zfs = {

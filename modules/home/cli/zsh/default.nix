@@ -4,10 +4,12 @@
   pkgs,
   namespace,
   ...
-}: let
-  inherit (lib) mkEnableOption mkIf;
+}:
+with lib;
+with lib.universe; let
+  inherit (lib) mkIf;
 
-  cfg = config.${namespace}.cli-apps.zsh;
+  cfg = config.${namespace}.cli.zsh;
 
   tty-color-support = with lib.${namespace}.colors; ''
     if [ "$TERM" = "linux" ]; then
@@ -31,8 +33,8 @@
     fi
   '';
 in {
-  options.${namespace}.cli-apps.zsh = {
-    enable = mkEnableOption "ZSH";
+  options.${namespace}.cli.zsh = {
+    enable = mkBoolOpt false "Whether or not to enable ZSH.";
   };
 
   config = mkIf cfg.enable {

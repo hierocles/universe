@@ -24,7 +24,7 @@ in {
   universe = {
     nix = enabled;
     archetypes = {barebones = enabled;};
-    cli-apps = {flake = enabled;};
+    # cli-apps = {flake = enabled;}; # Temporarily disabled due to flake check issues
     tools = {
       git = enabled;
       misc = enabled;

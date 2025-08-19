@@ -36,7 +36,9 @@ in {
         };
       };
 
-      cli-apps = {flake = enabled;};
+      cli-apps = {
+        flake = enabled;
+      };
 
       tools = {
         git = enabled;
@@ -59,9 +61,9 @@ in {
       };
 
       system = {
-        boot = enabled;
         locale = enabled;
         time = enabled;
+        zsh = enabled;
       };
     };
   };

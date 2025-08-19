@@ -24,17 +24,6 @@ in {
   };
 
   config = {
-    programs.zsh = {
-      enable = true;
-      autosuggestions.enable = true;
-      syntaxHighlighting.enable = true;
-      enableCompletion = true;
-      history = {
-        path = "$XDG_CACHE_HOME/zsh.history";
-        size = 10000;
-      };
-    };
-
     universe.home = {
       file = mkIf (!cfg.headless) {
         "Desktop/.keep".text = "";
@@ -64,10 +53,11 @@ in {
 
           zsh = {
             enable = true;
-            enableCompletion = true;
+            autosuggestions.enable = true;
             syntaxHighlighting.enable = true;
-
-            autosuggestion.enable = true;
+            enableCompletion = true;
+            histPath = "$XDG_CACHE_HOME/zsh.history";
+            histSize = 10000;
 
             plugins = [
               {
