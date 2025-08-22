@@ -18,6 +18,7 @@ in {
     gpgKeyPaths = mkOpt (listOf str) [] "The paths to the GPG keys to use for SOPS.";
     validate = mkBoolOpt true "Whether or not to validate the SOPS files. Default: true";
     templates = mkOpt attrs {} "A set of templates to use for SOPS.";
+    generateKey = mkBoolOpt false "Whether or not to generate a new age key.";
 
     # Multi-user helpers
     userSecrets = mkOpt attrs {} "User-specific secrets organized by username.";
@@ -42,8 +43,11 @@ in {
     ];
     sops = {
       inherit (cfg) defaultSopsFile;
-      age.sshKeyPaths = mkIf (cfg.ageSshKeyPaths != []) cfg.ageSshKeyPaths;
-      age.keyFile = mkIf (cfg.ageKeyFile != null) cfg.ageKeyFile;
+      age = {
+        sshKeyPaths = mkIf (cfg.ageSshKeyPaths != []) cfg.ageSshKeyPaths;
+        keyFile = mkIf (cfg.ageKeyFile != null) cfg.ageKeyFile;
+        generateKey = mkIf cfg.generateKey true;
+      };
       gnupg.sshKeyPaths = mkIf (cfg.gpgKeyPaths != []) cfg.gpgKeyPaths;
       validateSopsFiles = mkIf cfg.validate true;
       inherit (cfg) templates;

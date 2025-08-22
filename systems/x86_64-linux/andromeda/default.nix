@@ -37,10 +37,15 @@ with lib.${namespace}; {
     };
     security = {
       gpg = enabled;
+      doas = enabled;
       sops = {
         enable = true;
         defaultSopsFile = ../../../secrets/secrets.yaml;
-        ageKeyFile = "/etc/sops/age/system.txt";
+        ageSshKeyPaths = [
+          "/etc/ssh/ssh_host_ed25519_key"
+        ];
+        generateKey = true;
+
         userSecrets = {
           dylan = {
             "ssh-public-key" = {

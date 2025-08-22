@@ -29,6 +29,7 @@ with lib.${namespace}; {
     home-manager = {
       useUserPackages = true;
       useGlobalPkgs = true;
+      backupFileExtension = "backup";
     };
   };
 }

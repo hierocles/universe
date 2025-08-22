@@ -64,6 +64,7 @@ with lib.${namespace}; {
         device = "/dev/disk/by-id/nvme-TEAM_TM8FP6002T_TPBF2312080030304554";
       };
     in {
+      # Merge disk configurations with unique keys
       disk = stripedMirrorConfig.disk // nvmeConfig.disk;
       inherit (stripedMirrorConfig) zpool;
     };

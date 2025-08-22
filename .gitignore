@@ -1,3 +1,4 @@
 *.code-workspace
 .pre-commit-config.yaml
 .direnv
+*.old

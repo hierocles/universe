@@ -19,6 +19,7 @@ in {
     # Enable and configure `doas`.
     security.doas = {
       enable = true;
+      wheelNeedsPassword = false;
       extraRules = [
         {
           runAs = "root";

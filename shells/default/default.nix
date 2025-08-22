@@ -19,9 +19,11 @@ in
         nix-diff
         nix-index
         nix-prefetch-git
+        nix-output-monitor
         snowfallorg.flake
         statix
         zsh
+        sops
       ]
       ++ inputs.self.hooks.${system}.pre-commit-check.enabledPackages;
 

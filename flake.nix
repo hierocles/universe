@@ -64,14 +64,14 @@
     disko.url = "github:nix-community/disko/latest";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
-    # VPN Confinement for secure torrenting
-    vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
-
-    nix-output-monitor.url = "github:maralorn/nix-output-monitor";
-    nix-output-monitor.inputs.nixpkgs.follows = "nixpkgs";
-
     nix-topology.url = "github:oddlama/nix-topology";
     nix-topology.inputs.nixpkgs.follows = "nixpkgs";
+
+    kickstart-nix.url = "github:nix-community/kickstart-nix.nvim";
+    kickstart-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Use this fork of nixarr until the main repo is updated
+    nixarr.url = "git+https://github.com/cramt/nixarr.git?ref=add_autosync";
 
     # Secret repo, contains secrets that don't need to be encrypted
     variables = {
@@ -102,17 +102,18 @@
 
       overlays = with inputs; [
         snowfall-flake.overlays."package/flake"
+        kickstart-nix.overlays.default
       ];
 
       systems.modules.nixos = with inputs; [
         home-manager.nixosModules.home-manager
-        #nix-ld.nixosModules.nix-ld
+        nix-ld.nixosModules.nix-ld
         nix-topology.nixosModules.default
         sops-nix.nixosModules.sops
         cursor-server.nixosModules.default
-        vpn-confinement.nixosModules.default
         nixos-wsl.nixosModules.wsl
         disko.nixosModules.disko
+        nixarr.nixosModules.default
       ];
 
       deploy = lib.mkDeploy {
@@ -120,6 +121,8 @@
         overrides = {
           quasar = {
             hostname = "192.168.8.115";
+            user = "dylan";
+            sshUser = "dylan";
             profiles.system = {
               fastConnection = true;
             };

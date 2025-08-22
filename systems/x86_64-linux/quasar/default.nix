@@ -29,6 +29,7 @@ with lib.${namespace}; {
 
     suites = {
       common = enabled;
+      # nixarr = enabled;
     };
 
     system = {
@@ -42,91 +43,29 @@ with lib.${namespace}; {
       };
     };
 
-    tools = {
-      nix-ld = enabled; # Required for cursor-server
-      nil = enabled;
-      cursor-server = enabled;
-    };
-
-    services = {
-      # *arr stack for media management
-      arr = {
-        enable = true;
-        mediaPath = "/mnt/media";
-        user = "arr";
-        group = "arr";
-      };
-      # *arr services for media management
-      sonarr = enabled; # TV show management
-      radarr = enabled; # Movie management
-      prowlarr = enabled; # Indexer management
-      bazarr = enabled; # Subtitle management
-      jellyseerr = enabled; # Request management
-
-      # Media servers (choose one or both)
-      plex = enabled; # Commercial media server with premium features
-      jellyfin = disabled; # Open source media server
-
-      # VPN and Torrenting (configure wireguardConfigFile path)
-      vpn = {
-        enable = true;
-        namespaceName = "torrent";
-        wireguardConfigFile = config.sops.secrets.wg-conf.path;
-        accessibleFrom = ["192.168.0.0/16" "10.0.0.0/8"];
-        portMappings = [
-          {
-            from = 9091; # Transmission RPC port
-            to = 9091;
-            protocol = "tcp";
-          }
-        ];
-        openVPNPorts = [
-          {
-            port = 51413; # Transmission peer port
-            protocol = "both";
-          }
-        ];
-      };
-
-      torrent = {
-        enable = true;
-        useVPN = true;
-        downloadDir = "/mnt/media/downloads/completed";
-        incompleteDir = "/mnt/media/downloads/incomplete";
-        watchDir = "/mnt/media/downloads/watch";
-        peerPort = 51413; # Transmission peer port
-        authentication = {
-          enable = true;
-          credentialsFile = config.sops.secrets."transmission-rpc-credentials".path;
-        };
-      };
-
-      # Nginx reverse proxy for easy access
-      nginx = {
-        enable = true;
-        domain = "quasar.local";
-        ssl = true;
-        acme = true;
-        openFirewall = true;
-      };
-    };
-
     security = {
       gpg = enabled;
+      doas = enabled;
       sops = {
         enable = true;
         defaultSopsFile = ../../../secrets/secrets.yaml;
-        ageKeyFile = "/etc/sops/age/system.txt";
+        ageSshKeyPaths = [
+          "/etc/ssh/ssh_host_ed25519_key"
+        ];
+        generateKey = true;
 
         secrets = {
           "transmission-rpc-credentials" = {
-            owner = "arr";
-            group = "arr";
-            mode = "0600";
+            mode = "0644";
+            path = "/var/lib/secrets/transmission/rpc-credentials.json";
           };
           "wg-conf" = {
-            mode = "0600";
-            path = "/etc/wireguard/wg0.conf";
+            mode = "0644";
+            path = "/var/lib/secrets/wireguard/wg0.conf";
+          };
+          "njalla-keys" = {
+            mode = "0644";
+            path = "/var/lib/secrets/njalla/keys.json";
           };
         };
 
@@ -148,6 +87,67 @@ with lib.${namespace}; {
         };
       };
     };
+  };
+
+  # TODO: Move to a module
+  nixarr = {
+    enable = true;
+    mediaDir = "/mnt/media";
+    stateDir = "/var/lib/nixarr/state";
+    vpn = {
+      # Not currently working? Can't figure out why
+      enable = true;
+      wgConf = config.sops.secrets."wg-conf".path; # TODO: Make into a module parameter
+      vpnTestService = {
+        enable = true;
+        port = 6360;
+      };
+    };
+    autosync = true;
+    transmission = {
+      enable = true;
+      peerPort = 6360;
+      credentialsFile = config.sops.secrets."transmission-rpc-credentials".path; # TODO: Make into a module parameter
+      flood.enable = true;
+      vpn.enable = true;
+    };
+
+    autobrr.enable = true;
+    bazarr.enable = true;
+    radarr.enable = true;
+    sonarr.enable = true;
+    prowlarr.enable = true;
+    plex = {
+      enable = true;
+      #expose.https = {
+      #  enable = true;
+      #  domainName = "plex.hierocles.win";
+      #  acmeMail = "4733259+hierocles@users.noreply.github.com";
+      #};
+    };
+    jellyseerr = {
+      enable = true;
+      # expose.https = {
+      #   enable = true;
+      #   domainName = "jellyseerr.hierocles.win";
+      #   acmeMail = "4733259+hierocles@users.noreply.github.com";
+      # };
+    };
+
+    # ddns.njalla = {
+    #  enable = true;
+    #  keysFile = config.sops.secrets."njalla-keys".path;
+    #};
+
+    recyclarr = {
+      enable = true;
+      configFile = ./recyclarr.yaml;
+    };
+  };
+
+  # TODO: Flaresolverr module or include in nixarr module?
+  services.flaresolverr = {
+    enable = true;
   };
 
   system.stateVersion = "25.05";

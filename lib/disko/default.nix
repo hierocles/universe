@@ -15,7 +15,7 @@ in {
     device,
   }: {
     disk = {
-      main = {
+      nvme = {
         # When using disko-install, we will overwrite this value from the commandline
         inherit device;
         type = "disk";
@@ -110,23 +110,30 @@ in {
     # Build disk configurations for all devices from all vdevs
     diskConfigs = lib.foldl' (acc: vdev: acc // (mkDiskConfig vdev)) {} vdevs;
 
-    # Build the correct ZFS pool topology for disko
-    # Format: "mirror disk1 disk2 mirror disk3 disk4" for striped mirrors
-    poolTopology = lib.concatStringsSep " " (
-      lib.map (
-        vdev:
-          "mirror " + (lib.concatStringsSep " " (lib.attrNames vdev))
-      )
-      vdevs
-    );
+    # Build the ZFS pool topology for disko using the topology attribute
+    # Each vdev becomes a mirror group, and multiple vdevs are striped together
+    poolTopology =
+      lib.map (vdev: {
+        mode = "mirror";
+        members = lib.attrNames vdev;
+      })
+      vdevs;
   in {
     disk = diskConfigs;
     zpool = {
       ${poolName} = {
         type = "zpool";
-        mode = poolTopology;
-        inherit mountpoint;
-        options = datasetOptions;
+        mode = {
+          topology = {
+            type = "topology";
+            vdev = poolTopology;
+          };
+        };
+        rootFsOptions =
+          {
+            inherit mountpoint;
+          }
+          // datasetOptions;
       };
     };
   };
