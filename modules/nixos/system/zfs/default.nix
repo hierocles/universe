@@ -18,6 +18,6 @@ in {
     services.zfs.autoScrub.enable = true;
     #boot.kernelPackages = config.boot.zfs.package.linuxPackages_6_15;
     networking.hostId = cfg.hostId;
-    services.zfs.autoSnapshot = {enable = true;};
+    services.zfs.autoSnapshot.enable = true;
   };
 }

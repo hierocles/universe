@@ -19,6 +19,7 @@ in {
       defaultEditor = true;
       viAlias = true;
       vimAlias = true;
+      #package = pkgs.nvim-pkg;
     };
 
     # Additional packages
@@ -41,7 +42,6 @@ in {
       fzf
       bat
       delta
-      nvim-pkg
     ];
 
     # Session variables

@@ -1,7 +1,9 @@
 {
   inputs = {
-    # Nixpkgs
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # nixpkgs-unstable
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
     # WSL
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
@@ -9,30 +11,30 @@
     # Snowfall
     snowfall-lib = {
       url = "github:snowfallorg/lib";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-master";
     };
 
     # Snowfall Flake
     snowfall-flake.url = "github:snowfallorg/flake";
-    snowfall-flake.inputs.nixpkgs.follows = "nixpkgs";
+    snowfall-flake.inputs.nixpkgs.follows = "nixpkgs-master";
 
     # Generate System Images
     nixos-generators.url = "github:nix-community/nixos-generators";
-    nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-generators.inputs.nixpkgs.follows = "nixpkgs-master";
 
     # Cursor Server for remote development
     cursor-server = {
       url = "github:zoid-archive/nixos-cursor-server";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-master";
     };
 
     # Home Manager
     home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs-master";
 
     # MacOS
     darwin.url = "github:LnL7/nix-darwin";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
+    darwin.inputs.nixpkgs.follows = "nixpkgs-master";
 
     # GPG
     gpg-base-conf = {
@@ -42,42 +44,37 @@
 
     # Comma
     comma.url = "github:nix-community/comma";
-    comma.inputs.nixpkgs.follows = "nixpkgs";
+    comma.inputs.nixpkgs.follows = "nixpkgs-master";
 
     # Run unpatched dynamically compiled binaries
-    nix-ld.url = "github:Mic92/nix-ld";
-    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
+    #nix-ld.url = "github:Mic92/nix-ld";
+    #nix-ld.inputs.nixpkgs.follows = "nixpkgs-master";
 
     # System Deployment
     deploy-rs.url = "github:serokell/deploy-rs";
-    deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
+    deploy-rs.inputs.nixpkgs.follows = "nixpkgs-master";
 
     # SOPS for secrets management
     sops-nix.url = "github:Mic92/sops-nix";
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs-master";
 
     # Pre-commit hooks
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
-    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
+    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-master";
 
     # Disko for disk configuration
     disko.url = "github:nix-community/disko/latest";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
+    disko.inputs.nixpkgs.follows = "nixpkgs-master";
 
     nix-topology.url = "github:oddlama/nix-topology";
-    nix-topology.inputs.nixpkgs.follows = "nixpkgs";
+    nix-topology.inputs.nixpkgs.follows = "nixpkgs-master";
 
-    kickstart-nix.url = "github:nix-community/kickstart-nix.nvim";
-    kickstart-nix.inputs.nixpkgs.follows = "nixpkgs";
+    # kickstart-nix.url = "github:nix-community/kickstart-nix.nvim";
+    # kickstart-nix.inputs.nixpkgs.follows = "nixpkgs-master";
 
     # Use this fork of nixarr until the main repo is updated
     nixarr.url = "git+https://github.com/cramt/nixarr.git?ref=add_autosync";
-
-    # Secret repo, contains secrets that don't need to be encrypted
-    variables = {
-      url = "git+ssh://git@github.com/hierocles/snowfall-secrets?ref=main&shallow=1";
-      flake = true;
-    };
+    nixarr.inputs.nixpkgs.follows = "nixpkgs-master";
   };
 
   outputs = inputs: let
@@ -102,12 +99,11 @@
 
       overlays = with inputs; [
         snowfall-flake.overlays."package/flake"
-        kickstart-nix.overlays.default
+        #kickstart-nix.overlays.default
       ];
 
       systems.modules.nixos = with inputs; [
         home-manager.nixosModules.home-manager
-        nix-ld.nixosModules.nix-ld
         nix-topology.nixosModules.default
         sops-nix.nixosModules.sops
         cursor-server.nixosModules.default

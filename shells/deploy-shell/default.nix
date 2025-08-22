@@ -25,7 +25,11 @@ with lib.universe;
       echo -e "\e[1;34m|      🔹 deploy --hostname <hostname|ip>                   |\e[0m"
       echo -e "\e[1;34m|          github:hierocles/universe#<hostname>             |\e[0m"
       echo -e "\e[1;34m|          --skip-checks                                    |\e[0m"
+      echo -e "\e[1;34m|      🔹 deploy-quasar                                     |\e[0m"
       echo -e "\e[1;36m|                                                           |\e[0m"
       echo -e "\e[1;32m+-----------------------------------------------------------+\e[0m"
+
+      # Set up shell aliases
+      alias deploy-quasar="deploy --hostname 192.168.8.115 .#quasar |& nom"
     '';
   }

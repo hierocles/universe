@@ -40,7 +40,9 @@ with lib.${namespace}; {
       "1.0.0.1"
     ];
   };
-
+  programs.nh = {
+    enable = true;
+  };
   universe = {
     user = {
       name = "dylan";

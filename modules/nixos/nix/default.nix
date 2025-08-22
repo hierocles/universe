@@ -43,8 +43,8 @@ in {
       universe.nixos-revision
       nix-prefetch-git
       nix-index
-      nix-output-monitor
       alejandra
+      just
     ];
 
     nix = let
@@ -84,9 +84,25 @@ in {
       };
 
       # flake-utils-plus
-      generateRegistryFromInputs = true;
+      # generateRegistryFromInputs = true; # Removed to prevent registry conflicts
       generateNixPathFromInputs = true;
       linkInputs = true;
+
+      # Manual registry configuration to avoid conflicts
+      registry = {
+        nixpkgs = {
+          from = {
+            id = "nixpkgs";
+            type = "indirect";
+          };
+          to = {
+            type = "github";
+            owner = "NixOS";
+            repo = "nixpkgs";
+            ref = "nixos-unstable";
+          };
+        };
+      };
     };
   };
 }

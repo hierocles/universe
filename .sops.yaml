@@ -1,9 +1,8 @@
 # .sops.yaml
 keys:
   - &age_andromeda age1tj0uulwu6h986aqswhdtffnm0mtsg44e92358ytrg3mele69wqgs0z8tyn
-  - &age_quasar age17r7l7hearqayelv9c54nsrtq6lndj77qlyv3l0afvew53gzfkpfq8csfc6
+  - &age_quasar age1tlucxz2jugsw6knmlax65qqkre954ystq3mjhya80sy7lzgasddsmsvfn5
   - &age_dylan age1alh6wlt64qlhzrznj0k6gtp3u8xezvytml2ah4gmceurjvtshstq2h9l8t
-  - &age_installer age1cgaltexag593xjfarye3cgnc4dl744qpqlr8sg5u30p0m4gq7qcsq3dv2c
 
 creation_rules:
   - path_regex: .*
@@ -12,4 +11,3 @@ creation_rules:
           - *age_andromeda
           - *age_quasar
           - *age_dylan
-          - *age_installer

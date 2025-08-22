@@ -9,4 +9,10 @@
       vpl-gpu-rt
     ];
   };
+
+  fileSystems."/mnt/media" = {
+    device = "media";
+    fsType = "zfs";
+    options = ["defaults"];
+  };
 }

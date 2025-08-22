@@ -66,5 +66,10 @@ with lib.${namespace}; {
     };
   };
 
+  programs.nh = {
+    enable = true;
+    flake = "/home/dylan/snowfall-config"; # sets NH_OS_FLAKE variable for you
+  };
+
   system.stateVersion = "25.05";
 }

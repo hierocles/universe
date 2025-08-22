@@ -10,7 +10,6 @@ with lib.${namespace}; {
   # Vdev 1: sda + sdb (mirror) → 9.1TB usable
   # Vdev 2: sdc + sdd (mirror) → 9.1TB usable
   # Total: 18.2TB usable space across striped mirrors
-  # Single mountpoint: /mnt/media for optimal media sharing performance
   # NVMe drive: 1.9TB BTRFS for NixOS system
 
   disko = {
@@ -30,7 +29,7 @@ with lib.${namespace}; {
           }
         ];
         poolName = "media";
-        mountpoint = "/mnt/media";
+        mountpoint = "legacy";
         datasetOptions = {
           # Disable automatic snapshots for media storage
           "com.sun:auto-snapshot" = "false";

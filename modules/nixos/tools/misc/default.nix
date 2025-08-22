@@ -32,6 +32,7 @@ in {
       btop
       deno
       flameshot
+      #nvim-pkg
       neovim
       devour
       usbutils
