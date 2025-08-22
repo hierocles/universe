@@ -22,11 +22,8 @@ with lib.${namespace}; {
       ];
       manage-other-hosts = true;
       extraConfigs = ''
-        Host 192.168.8.115
-          User dylan
+        Host *
           IdentityFile ~/.ssh/id_andromeda
-          ForwardAgent yes
-          IdentitiesOnly yes
       '';
     };
   };
