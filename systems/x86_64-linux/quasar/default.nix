@@ -13,6 +13,7 @@ with lib.${namespace}; {
 
   networking = {
     hostName = "quasar";
+    enableIPv6 = false;
     interfaces = {
       enp3s0 = {
         ipv4.addresses = [
@@ -23,6 +24,13 @@ with lib.${namespace}; {
         ];
       };
     };
+    #firewall = {
+    #  enable = true;
+    #  allowedTCPPorts = [
+    #    80
+    #    443
+    #  ];
+    #};
     defaultGateway = {
       address = "192.168.8.1";
       interface = "enp3s0";
@@ -85,6 +93,10 @@ with lib.${namespace}; {
             mode = "0644";
             path = "/var/lib/secrets/wireguard/wg0.conf";
           };
+          "wg-conf-ipv4-only" = {
+            mode = "0644";
+            path = "/var/lib/secrets/wireguard/wg0-ipv4-only.conf";
+          };
           "njalla-keys" = {
             mode = "0644";
             path = "/var/lib/secrets/njalla/keys.json";
@@ -117,14 +129,22 @@ with lib.${namespace}; {
     mediaDir = "/mnt/media";
     stateDir = "/var/lib/nixarr/state";
     vpn = {
-      # Not currently working? Can't figure out why
       enable = true;
-      wgConf = config.sops.secrets."wg-conf".path; # TODO: Make into a module parameter
+      accessibleFrom = [
+        "192.168.8.0/24"
+      ];
+      wgConf = config.sops.secrets."wg-conf-ipv4-only".path; # TODO: Make into a module parameter
       vpnTestService = {
         enable = true;
         port = 28813;
       };
     };
+
+    ddns.njalla = {
+      enable = true;
+      keysFile = config.sops.secrets."njalla-keys".path;
+    };
+
     autosync = true;
     transmission = {
       enable = true;
@@ -141,25 +161,21 @@ with lib.${namespace}; {
     prowlarr.enable = true;
     plex = {
       enable = true;
-      #expose.https = {
-      #  enable = true;
-      #  domainName = "plex.hierocles.win";
-      #  acmeMail = "4733259+hierocles@users.noreply.github.com";
-      #};
+      # Build fails on attempting ACME challenge and I can't figure out why
+      #  expose.https = {
+      #    enable = true;
+      #    domainName = "watch.hierocles.win";
+      #    acmeMail = "acme@hierocles.win";
+      #  };
     };
     jellyseerr = {
       enable = true;
-      # expose.https = {
-      #   enable = true;
-      #   domainName = "jellyseerr.hierocles.win";
-      #   acmeMail = "4733259+hierocles@users.noreply.github.com";
-      # };
+      #  expose.https = {
+      #    enable = true;
+      #    domainName = "requests.hierocles.win";
+      #    acmeMail = "acme@hierocles.win";
+      #  };
     };
-
-    # ddns.njalla = {
-    #  enable = true;
-    #  keysFile = config.sops.secrets."njalla-keys".path;
-    #};
 
     recyclarr = {
       enable = true;
@@ -171,6 +187,5 @@ with lib.${namespace}; {
   services.flaresolverr = {
     enable = true;
   };
-
   system.stateVersion = "25.05";
 }
