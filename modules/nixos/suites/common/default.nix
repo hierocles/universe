@@ -47,9 +47,9 @@ in {
         comma = enabled;
       };
 
-      hardware = {
-        networking = enabled;
-      };
+      # hardware = {
+      #   networking = enabled;
+      # };
 
       services = {
         openssh = {

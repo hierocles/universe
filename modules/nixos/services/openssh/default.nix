@@ -86,7 +86,7 @@ in {
       ports = [22 cfg.port];
     };
 
-    programs.ssh.forwardX11 = true;
+    # programs.ssh.forwardX11 = true;  # Disabled to prevent X11 forwarding warnings
     programs.ssh.extraConfig = ''
       Host *
         HostKeyAlgorithms +ssh-rsa

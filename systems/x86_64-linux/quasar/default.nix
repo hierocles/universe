@@ -11,6 +11,28 @@ with lib.${namespace}; {
     ./disks.nix
   ];
 
+  networking = {
+    hostName = "quasar";
+    interfaces = {
+      enp3s0 = {
+        ipv4.addresses = [
+          {
+            address = "192.168.8.115";
+            prefixLength = 24;
+          }
+        ];
+      };
+    };
+    defaultGateway = {
+      address = "192.168.8.1";
+      interface = "enp3s0";
+    };
+    nameservers = [
+      "1.1.1.1"
+      "1.0.0.1"
+    ];
+  };
+
   universe = {
     user = {
       name = "dylan";
@@ -100,13 +122,13 @@ with lib.${namespace}; {
       wgConf = config.sops.secrets."wg-conf".path; # TODO: Make into a module parameter
       vpnTestService = {
         enable = true;
-        port = 6360;
+        port = 28813;
       };
     };
     autosync = true;
     transmission = {
       enable = true;
-      peerPort = 6360;
+      peerPort = 28813;
       credentialsFile = config.sops.secrets."transmission-rpc-credentials".path; # TODO: Make into a module parameter
       flood.enable = true;
       vpn.enable = true;

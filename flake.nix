@@ -126,6 +126,7 @@
             profiles.system = {
               fastConnection = true;
             };
+            sshOpts = ["-o" "ForwardX11=no"];
           };
         };
       };
