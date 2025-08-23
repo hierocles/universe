@@ -73,7 +73,7 @@
     # kickstart-nix.inputs.nixpkgs.follows = "nixpkgs-master";
 
     # Use this fork of nixarr until the main repo is updated
-    nixarr.url = "git+https://github.com/cramt/nixarr.git?ref=add_autosync";
+    nixarr.url = "git+https://github.com/hierocles/nixarr.git?ref=test-prs-78-80";
     nixarr.inputs.nixpkgs.follows = "nixpkgs-master";
   };
 

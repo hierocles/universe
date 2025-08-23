@@ -154,6 +154,21 @@ with lib.${namespace}; {
       credentialsFile = config.sops.secrets."transmission-rpc-credentials".path; # TODO: Make into a module parameter
       flood.enable = true;
       vpn.enable = true;
+      privateTrackers = {
+        cross-seed = {
+          enable = true;
+          indexIds = [
+            8
+            9
+          ];
+          extraSettings = {
+            rssCadence = "30 minutes";
+            searchCadence = "1 day";
+            excludeOlder = "2 weeks";
+            excludeRecentSearch = "3 days";
+          };
+        };
+      };
     };
 
     autobrr.enable = true;
