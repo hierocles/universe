@@ -1,0 +1,160 @@
+---
+description: Infrastructure and System Documentation
+globs:
+alwaysApply: true
+---
+
+# Infrastructure Documentation
+
+This configuration manages multiple systems with specific purposes and deployment targets.
+
+## System Overview
+
+### andromeda
+- **Platform**: NixOS running on WSL (Windows Subsystem for Linux)
+- **Host OS**: Windows 11
+- **Purpose**: Primary development workstation
+- **Architecture**: x86_64-linux
+- **Deployment**: Local development and testing
+- **Special Considerations**: 
+  - WSL-specific configurations via nixos-wsl module
+  - Windows/Linux interoperability
+  - File system performance considerations
+  - X11 forwarding disabled for SSH connections
+
+### quasar
+- **Platform**: NixOS bare metal server
+- **Purpose**: Media server and automation hub
+- **Location**: Local network (192.168.8.115)
+- **Architecture**: x86_64-linux
+- **Deployment**: Remote deployment via deploy-rs
+- **Services**: 
+  - *arr software stack (Sonarr, Radarr, Lidarr, etc.)
+  - Media management and automation
+  - Network storage and file sharing
+- **Connection**: Fast connection enabled for efficient deployment
+- **SSH Configuration**: ForwardX11 disabled for security
+
+## Network Architecture
+
+### Local Network
+- **Subnet**: 192.168.8.0/24
+- **Gateway**: Local router
+- **DNS**: Local DNS resolution
+- **Firewall**: Configured for media server access
+
+### Remote Access
+- **SSH**: Secure shell access to quasar
+- **Deployment**: Automated via deploy-rs
+- **Authentication**: SSH key-based authentication
+- **Security**: Restricted access and secure configurations
+
+## Deployment Strategy
+
+### Development (andromeda)
+- **Local Testing**: Test configurations locally before deployment
+- **Module Development**: Develop and test new modules
+- **Validation**: Run `nix flake check --impure` before committing
+- **Staging**: Use andromeda as staging environment
+
+### Production (quasar)
+- **Remote Deployment**: Deploy via deploy-rs from andromeda
+- **Rollback Capability**: Maintain ability to rollback deployments
+- **Monitoring**: Monitor system health and service status
+- **Backup**: Regular backups of critical data
+
+## Service Architecture
+
+### Media Services Stack
+- **Sonarr**: TV show management and automation
+- **Radarr**: Movie management and automation
+- **Bazarr**: Subtitle management
+- **Prowlarr**: Indexer management
+- **Jellyseerr**: Media request management
+
+### Supporting Services
+- **Plex/Jellyfin**: Media streaming server
+- **Transmission**: Torrent client
+- **Autobrr**:IRC announce fetch management for private torrent trackers
+- **Cross-seed**: Torrent cross-seeing for private torrent trackers
+
+## Configuration Patterns
+
+### Network Configuration
+```nix
+# quasar network configuration
+networking = {
+  hostName = "quasar";
+  defaultGateway = "192.168.8.1";
+  nameservers = [ "192.168.8.1" "8.8.8.8" ];
+  interfaces.eth0.ipv4.addresses = [{
+    address = "192.168.8.115";
+    prefixLength = 24;
+  }];
+};
+```
+
+## Security Considerations
+
+### Network Security
+- **Firewall Rules**: Restrict access to necessary ports only
+- **SSH Security**: Key-based authentication, disable password auth
+- **Service Isolation**: Run services with minimal privileges
+- **Network Segmentation**: Isolate media services from other network traffic
+
+### Data Protection
+- **Encryption**: Encrypt sensitive data at rest
+- **Backups**: Regular encrypted backups of critical data
+- **Access Control**: Limit access to media server resources
+- **Monitoring**: Monitor for unauthorized access attempts
+
+## Maintenance and Operations
+
+### Regular Maintenance
+- **System Updates**: Regular NixOS system updates
+- **Service Updates**: Keep *arr stack and supporting services updated
+- **Log Rotation**: Manage log files and prevent disk space issues
+- **Health Checks**: Monitor system and service health
+
+### Backup Strategy
+- **Configuration Backup**: Version control for all configurations
+- **Data Backup**: Regular backups of media library and metadata
+- **Disaster Recovery**: Plan for system recovery and data restoration
+- **Testing**: Regular backup restoration testing
+
+### Monitoring and Alerting
+- **System Metrics**: Monitor CPU, memory, disk usage
+- **Service Status**: Monitor *arr services and dependencies
+- **Network Health**: Monitor network connectivity and performance
+- **Alerting**: Set up alerts for critical issues
+
+## Development Workflow
+
+### Local Development (andromeda)
+1. **Develop Modules**: Create and test new modules locally
+2. **Validate Configuration**: Run validation checks
+3. **Test Deployment**: Test deployment to quasar
+4. **Commit Changes**: Commit tested changes to version control
+
+### Production Deployment (quasar)
+1. **Staging Test**: Test configuration on andromeda first
+2. **Remote Deploy**: Deploy to quasar via deploy-rs
+3. **Verify Services**: Ensure all services are running correctly
+4. **Monitor Performance**: Monitor system performance after deployment
+
+## Troubleshooting
+
+### Common Issues
+- **WSL Issues**: File system performance, Windows integration
+- **Network Issues**: Connectivity, firewall, DNS resolution
+- **Service Issues**: *arr stack failures, dependency problems
+- **Deployment Issues**: SSH connection, permission errors
+
+### Debugging Steps
+1. **Check Logs**: Review system and service logs
+2. **Test Connectivity**: Verify network and SSH connectivity
+3. **Validate Configuration**: Run configuration validation
+4. **Check Dependencies**: Ensure all required services are running
+5. **Rollback if Needed**: Use rollback capability for critical issues
+
+Remember: This infrastructure supports both development and production workloads. Always test changes on andromeda before deploying to quasar, and maintain proper backup and rollback procedures.

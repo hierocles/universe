@@ -13,8 +13,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [];
-
     universe = {
       nix = {
         enable = true;

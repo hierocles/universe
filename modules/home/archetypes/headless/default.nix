@@ -19,7 +19,6 @@ in {
       cli = {
         flake = enabled;
         misc = enabled;
-        neovim = enabled;
         zsh = enabled;
         home-manager = enabled;
       };
@@ -27,14 +26,7 @@ in {
       tools = {
         git = enabled;
         ssh = enabled;
-        direnv = {
-          enable = true;
-          configTOML = ''
-            [global]
-            hide_env_diff = true
-            warn_timeout = "60s"
-          '';
-        };
+        direnv = enabled;
       };
     };
   };

@@ -26,6 +26,7 @@ in {
       ranger
       lsd
       git
+      gh
       rsync
       tldr
       zig
@@ -33,7 +34,7 @@ in {
       deno
       flameshot
       #nvim-pkg
-      neovim
+      #neovim  # Using nvix through Home Manager instead
       devour
       usbutils
       pciutils

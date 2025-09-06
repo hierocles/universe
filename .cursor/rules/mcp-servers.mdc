@@ -1,0 +1,71 @@
+---
+description: Use MCP Servers for GitHub and NixOS
+globs:
+alwaysApply: true
+---
+
+# MCP Server Usage
+
+AI agents should utilize the available MCP (Model Context Protocol) servers when working with this Nix configuration.
+
+## Available MCP Servers
+
+### GitHub MCP Server
+Use the GitHub MCP server for:
+- **Repository Information**: Get file contents, commits, issues, pull requests
+- **Code Search**: Find specific code patterns, functions, or configurations across GitHub repositories
+- **Documentation Lookup**: Access README files, documentation, and examples
+- **Issue Tracking**: Check for related issues, bug reports, or feature requests
+- **Release Information**: Get version information, changelogs, and release notes
+
+**When to use:**
+- Looking up NixOS module documentation
+- Finding examples of specific configurations
+- Checking for known issues with packages or modules
+- Getting the latest version information for packages
+- Understanding how other projects structure their Nix configurations
+
+### NixOS MCP Server
+Use the NixOS MCP server for:
+- **Package Information**: Look up package details, versions, and dependencies
+- **Option Documentation**: Get detailed information about NixOS configuration options
+- **Home Manager Options**: Find Home Manager configuration options and their descriptions
+- **nix-darwin Options**: Access macOS-specific configuration options
+- **Flake Information**: Search for community flakes and their packages
+
+**When to use:**
+- Understanding NixOS configuration options
+- Finding the correct syntax for specific settings
+- Looking up package availability and versions
+- Discovering Home Manager options for user configurations
+- Finding community flakes for additional functionality
+
+## Usage Guidelines
+
+1. **Always check MCP servers first** when you need:
+   - Documentation for NixOS options
+   - Package information or versions
+   - Examples of specific configurations
+   - Information about community flakes
+
+2. **Use GitHub MCP for**:
+   - Finding real-world examples
+   - Checking for issues or discussions
+   - Getting the latest documentation
+   - Understanding project structure
+
+3. **Use NixOS MCP for**:
+   - Official option documentation
+   - Package availability and versions
+   - Configuration syntax and examples
+   - Community flake discovery
+
+4. **Combine both servers** when you need comprehensive information about a topic
+
+## Examples
+
+- **Looking up a NixOS option**: Use NixOS MCP to get official documentation, then GitHub MCP to find real-world usage examples
+- **Finding a package**: Use NixOS MCP to check availability and versions, then GitHub MCP to find configuration examples
+- **Troubleshooting**: Use GitHub MCP to search for related issues, then NixOS MCP to understand the official configuration options
+
+Always prefer authoritative sources (official NixOS documentation via NixOS MCP) over community examples, but use GitHub MCP to find practical implementation examples and troubleshoot issues.

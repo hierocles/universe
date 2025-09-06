@@ -15,6 +15,15 @@ with lib.${namespace}; {
     archetypes = {
       headless = enabled;
     };
+    cli = {
+      nixvim = {
+        enable = true;
+        claude = true;
+      };
+    };
+    tools = {
+      tmux = enabled;
+    };
     services.openssh = {
       enable = true;
       authorizedKeys = [

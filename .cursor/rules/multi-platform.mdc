@@ -1,0 +1,119 @@
+---
+description: Multi-Platform Configuration
+globs:
+alwaysApply: true
+---
+
+# Multi-Platform Configuration
+
+This configuration supports multiple platforms and should maintain compatibility across all supported systems.
+
+## Supported Platforms
+
+- **Linux (x86_64)**: Primary development platform
+- **macOS (darwin)**: Secondary platform support via nix-darwin
+- **WSL**: Windows Subsystem for Linux support via nixos-wsl
+
+## Platform Detection
+
+Use Nix's built-in platform detection for conditional configuration:
+
+```nix
+# Platform-specific packages
+let
+  platformPackages = if pkgs.stdenv.isLinux then [
+    pkgs.linuxPackages.kernel
+    pkgs.systemd
+  ] else if pkgs.stdenv.isDarwin then [
+    pkgs.darwin.apple_sdk.frameworks.CoreFoundation
+  ] else [];
+in
+# Use platformPackages in configuration
+```
+
+## Platform-Specific Considerations
+
+### Linux (NixOS)
+- **System Configuration**: Use NixOS modules for system-level config
+- **Services**: Configure systemd services and system services
+- **Hardware**: Handle hardware-specific configurations
+- **Boot**: Configure bootloader and kernel parameters
+
+### macOS (nix-darwin)
+- **System Configuration**: Use nix-darwin modules for macOS-specific config
+- **Services**: Use launchd for service management
+- **User Configuration**: Combine with home-manager for user settings
+- **macOS Features**: Leverage macOS-specific features and frameworks
+
+### WSL (Windows Subsystem for Linux)
+- **WSL Integration**: Use nixos-wsl module for WSL-specific features
+- **Windows Integration**: Handle Windows/Linux interoperability
+- **File System**: Consider WSL file system performance implications
+- **Networking**: Configure networking for WSL environment
+
+## Configuration Patterns
+
+### Conditional Module Loading
+```nix
+# Load platform-specific modules
+{ config, lib, pkgs, ... }:
+let
+  isLinux = pkgs.stdenv.isLinux;
+  isDarwin = pkgs.stdenv.isDarwin;
+in
+{
+  imports = [
+    # Common modules
+    ./common.nix
+  ] ++ lib.optionals isLinux [
+    # Linux-specific modules
+    ./linux-specific.nix
+  ] ++ lib.optionals isDarwin [
+    # macOS-specific modules
+    ./darwin-specific.nix
+  ];
+}
+```
+
+### Platform-Specific Packages
+```nix
+# Platform-specific package selection
+let
+  platformPackages = with pkgs; [
+    # Common packages
+    git
+    vim
+  ] ++ lib.optionals stdenv.isLinux [
+    # Linux-only packages
+    systemd
+    linuxPackages.kernel
+  ] ++ lib.optionals stdenv.isDarwin [
+    # macOS-only packages
+    darwin.apple_sdk.frameworks.CoreFoundation
+  ];
+in
+```
+
+## Best Practices
+
+- **Test All Platforms**: Ensure configurations work on all supported platforms
+- **Platform Abstraction**: Use platform-agnostic approaches when possible
+- **Clear Separation**: Clearly separate platform-specific and common configurations
+- **Documentation**: Document platform-specific requirements and limitations
+- **Conditional Logic**: Use clear, readable conditional logic for platform differences
+
+## Common Pitfalls
+
+- **Hardcoded Paths**: Avoid hardcoded paths that differ between platforms
+- **Platform-Specific Commands**: Use cross-platform alternatives when possible
+- **Service Management**: Use appropriate service managers per platform
+- **File Permissions**: Handle file permissions correctly across platforms
+
+## Development Workflow
+
+- **Platform Testing**: Test changes on all supported platforms
+- **CI/CD**: Include platform-specific tests in CI/CD pipelines
+- **Documentation**: Keep platform-specific documentation up to date
+- **Issue Tracking**: Track platform-specific issues and solutions
+
+Remember: Multi-platform support requires careful consideration of platform differences while maintaining a consistent user experience across all supported systems.

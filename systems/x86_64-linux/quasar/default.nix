@@ -40,9 +40,7 @@ with lib.${namespace}; {
       "1.0.0.1"
     ];
   };
-  programs.nh = {
-    enable = true;
-  };
+
   universe = {
     user = {
       name = "dylan";
@@ -151,7 +149,7 @@ with lib.${namespace}; {
     transmission = {
       enable = true;
       peerPort = 28813;
-      credentialsFile = config.sops.secrets."transmission-rpc-credentials".path; # TODO: Make into a module parameter
+      #credentialsFile = config.sops.secrets."transmission-rpc-credentials".path; # TODO: Make into a module parameter
       flood.enable = true;
       vpn.enable = true;
       privateTrackers = {
@@ -160,6 +158,7 @@ with lib.${namespace}; {
           indexIds = [
             8
             9
+            10
           ];
           extraSettings = {
             rssCadence = "30 minutes";

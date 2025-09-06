@@ -50,6 +50,11 @@ in {
           # Fix an issue with tmux.
           export KEYTIMEOUT=1
 
+          # Auto-start tmux if not already in tmux and not in SSH
+          if [[ -z "$TMUX" ]] && [[ -z "$SSH_CLIENT" ]] && [[ -z "$SSH_TTY" ]] && command -v tmux >/dev/null 2>&1; then
+            exec tmux new-session -A -s main
+          fi
+
           ${tty-color-support}
         '';
         plugins = [

@@ -1,0 +1,163 @@
+---
+description: Deployment and Remote Management
+globs:
+alwaysApply: true
+---
+
+# Deployment Configuration
+
+This configuration uses deploy-rs for remote system deployment and management.
+
+## Deployment Principles
+
+- **Declarative Deployment**: All deployment configuration is defined in code
+- **Remote Management**: Deploy to remote systems via SSH
+- **Rollback Capability**: Maintain ability to rollback deployments safely
+- **Connection Optimization**: Use fast connections when available for efficiency
+
+## Configuration Structure
+
+### Deploy Configuration
+```nix
+deploy = lib.mkDeploy {
+  inherit (inputs) self;
+  overrides = {
+    hostname = {
+      hostname = "192.168.1.100";
+      user = "dylan";
+      sshUser = "dylan";
+      profiles.system = {
+        fastConnection = true;
+      };
+      sshOpts = ["-o" "ForwardX11=no"];
+    };
+  };
+};
+```
+
+### Host-Specific Overrides
+- **Connection Settings**: Configure SSH options and connection parameters
+- **User Management**: Set appropriate users for deployment
+- **Performance**: Use fast connections when available
+- **Security**: Configure secure SSH options
+
+## Deployment Patterns
+
+### System Deployment
+```nix
+# Deploy system configuration
+nix run github:serokell/deploy-rs -- .#hostname
+
+# Deploy with specific profile
+nix run github:serokell/deploy-rs -- .#hostname --profile system
+```
+
+### Home Manager Deployment
+```nix
+# Deploy home configuration
+nix run github:serokell/deploy-rs -- .#hostname --profile home
+```
+
+### Rollback Operations
+```nix
+# Rollback to previous generation
+nix run github:serokell/deploy-rs -- .#hostname --rollback
+
+# List available generations
+nix run github:serokell/deploy-rs -- .#hostname --list-generations
+```
+
+## Best Practices
+
+### Deployment Safety
+- **Test First**: Always test deployments in development environments
+- **Incremental Changes**: Make small, incremental changes
+- **Rollback Plan**: Have a clear rollback plan for each deployment
+- **Backup Strategy**: Ensure system backups are available
+
+### Configuration Management
+- **Host Documentation**: Document each deployment target and its purpose
+- **Connection Testing**: Test SSH connections before deployment
+- **User Permissions**: Ensure proper user permissions for deployment
+- **Network Access**: Verify network connectivity and firewall rules
+
+### Monitoring and Logging
+- **Deployment Logs**: Monitor deployment logs for errors
+- **System Health**: Check system health after deployment
+- **Service Status**: Verify services are running correctly
+- **Performance**: Monitor system performance after changes
+
+## Security Considerations
+
+### SSH Configuration
+- **Key Management**: Use SSH keys for authentication
+- **Connection Security**: Use secure SSH options and configurations
+- **User Access**: Limit deployment user access appropriately
+- **Network Security**: Ensure secure network connections
+
+### Deployment Security
+- **Secrets Management**: Handle secrets securely during deployment
+- **Access Control**: Control who can trigger deployments
+- **Audit Trail**: Maintain audit trail of deployments
+- **Rollback Security**: Ensure rollback operations are secure
+
+## Troubleshooting
+
+### Common Issues
+- **Connection Failures**: Check SSH configuration and network connectivity
+- **Permission Errors**: Verify user permissions and SSH key access
+- **Build Failures**: Check for configuration errors and missing dependencies
+- **Deployment Failures**: Review deployment logs and error messages
+
+### Debugging Steps
+1. **Test Connection**: Verify SSH connection manually
+2. **Check Configuration**: Validate deployment configuration
+3. **Review Logs**: Check deployment and system logs
+4. **Verify Dependencies**: Ensure all required packages are available
+5. **Test Rollback**: Verify rollback procedures work
+
+## Development Workflow
+
+### Pre-Deployment
+1. **Local Testing**: Test configuration changes locally
+2. **Validation**: Run `nix flake check --impure`
+3. **Documentation**: Update deployment documentation if needed
+4. **Backup**: Ensure system backup is available
+
+### Deployment Process
+1. **Staging**: Deploy to staging environment if available
+2. **Production**: Deploy to production environment
+3. **Verification**: Verify deployment success and functionality
+4. **Monitoring**: Monitor system health and performance
+
+### Post-Deployment
+1. **Health Check**: Verify all services are running
+2. **Functionality Test**: Test key functionality
+3. **Performance Check**: Monitor system performance
+4. **Documentation**: Update deployment records
+
+## Advanced Features
+
+### Multi-Profile Deployment
+```nix
+# Deploy multiple profiles
+nix run github:serokell/deploy-rs -- .#hostname --profile system,home
+```
+
+### Conditional Deployment
+```nix
+# Deploy based on conditions
+nix run github:serokell/deploy-rs -- .#hostname --profile system --if-exists
+```
+
+### Custom Deployment Scripts
+```nix
+# Create custom deployment scripts
+let
+  deployScript = pkgs.writeShellScript "deploy" ''
+    # Custom deployment logic
+  '';
+in
+```
+
+Remember: Deployment is a critical operation that affects system stability. Always follow proper procedures, test thoroughly, and maintain rollback capabilities.

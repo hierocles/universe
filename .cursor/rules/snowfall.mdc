@@ -1,0 +1,53 @@
+---
+description: Use Snowfall Lib
+globs:
+alwaysApply: true
+---
+
+# Snowfall Lib Configuration
+
+This Nix flake uses **Snowfall Lib** (https://snowfall.org/) as its primary framework. All structure, configuration, and patterns should follow Snowfall lib's opinionated setup.
+
+## Key Principles
+
+- **Namespace**: `universe` (defined in flake.nix snowfall.meta.namespace)
+- **Module Discovery**: Snowfall lib automatically discovers modules in the `/modules` folder - no manual imports needed in flake.nix
+- **Opinionated Structure**: Follow Snowfall lib's conventions for organizing NixOS modules, home-manager modules, packages, overlays, and shells
+
+## Directory Structure
+
+```
+/modules/
+  /nixos/          # NixOS system modules
+  /home/           # Home Manager modules
+/packages/         # Custom packages
+/overlays/         # Package overlays
+/shells/           # Development shells
+/systems/          # System configurations
+/homes/            # Home configurations
+/lib/              # Custom library functions
+```
+
+## Module Organization
+
+- **NixOS modules**: Place in `/modules/nixos/` - they will be automatically discovered
+- **Home Manager modules**: Place in `/modules/home/` - they will be automatically discovered
+- **Module naming**: Use descriptive directory names that match the module's purpose
+- **No manual imports**: Snowfall lib handles module discovery via git, so modules must be staged (`git add`) to be visible
+
+## Configuration Patterns
+
+- Use `inherit` for cleaner variable assignments in Nix code
+- Reference secrets using `sops.secrets."file".path` syntax
+- Follow Snowfall lib's opinionated patterns for system and home configurations
+- Leverage the built-in deployment system via `lib.mkDeploy`
+
+## Available Tools
+
+AI agents have access to Snowfall lib reference documentation and should consult it when:
+- Creating new modules
+- Structuring configurations
+- Understanding the opinionated patterns
+- Working with the deployment system
+
+Always prefer Snowfall lib's conventions over custom solutions unless there's a specific technical requirement that cannot be met within the framework.

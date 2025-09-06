@@ -1,0 +1,201 @@
+---
+description: Code Quality and Linting Standards
+globs:
+alwaysApply: true
+---
+
+# Code Quality Standards
+
+Maintain high code quality through automated tooling and established best practices.
+
+## Automated Quality Tools
+
+This configuration uses several automated tools to maintain code quality:
+
+### Alejandra (Formatter)
+- **Purpose**: Enforce consistent Nix code formatting
+- **Usage**: `nix run nixpkgs#alejandra -- .`
+- **Configuration**: Uses default formatting rules
+- **Integration**: Runs automatically on pre-commit hooks
+
+### Deadnix (Dead Code Elimination)
+- **Purpose**: Remove unused variables, imports, and code
+- **Usage**: `nix run nixpkgs#deadnix -- .`
+- **Configuration**: Configured in `deadnix.toml`
+- **Integration**: Runs automatically on pre-commit hooks
+
+### Statix (Linter)
+- **Purpose**: Enforce Nix best practices and style guidelines
+- **Usage**: `nix run nixpkgs#statix -- .`
+- **Configuration**: Configured in `statix.toml`
+- **Integration**: Runs automatically on pre-commit hooks
+
+## Code Quality Standards
+
+### Nix Code Style
+- **Formatting**: Follow alejandra formatting conventions
+- **Naming**: Use descriptive, clear variable and function names
+- **Structure**: Follow Nix best practices and conventions
+- **Comments**: Add meaningful comments for complex logic
+
+### Code Organization
+- **Modularity**: Break code into logical, reusable modules
+- **Separation**: Separate concerns and responsibilities
+- **Composition**: Use functional composition over inheritance
+- **Abstraction**: Create appropriate levels of abstraction
+
+### Documentation Standards
+- **Module Headers**: Include clear module descriptions
+- **Option Documentation**: Document all configuration options
+- **Usage Examples**: Provide practical usage examples
+- **API Documentation**: Document public interfaces clearly
+
+## Quality Gates
+
+### Pre-commit Requirements
+- [ ] **Alejandra**: Code is properly formatted
+- [ ] **Deadnix**: No unused variables or imports
+- [ ] **Statix**: Follows Nix best practices
+- [ ] **Syntax**: No syntax errors
+- [ ] **Type Safety**: Proper type usage
+
+### Code Review Requirements
+- [ ] **Readability**: Code is clear and understandable
+- [ ] **Maintainability**: Code is easy to modify and extend
+- [ ] **Performance**: Code is efficient and doesn't cause unnecessary rebuilds
+- [ ] **Security**: No security vulnerabilities
+- [ ] **Testing**: Code is properly tested
+
+## Best Practices
+
+### Nix Language Best Practices
+```nix
+# Good: Use inherit for cleaner assignments
+{ inherit (cfg) user group; }
+
+# Bad: Repetitive assignments
+{ user = cfg.user; group = cfg.group; }
+
+# Good: Use descriptive names
+let
+  systemPackages = with pkgs; [ git vim ];
+in
+
+# Bad: Unclear names
+let
+  pkgs = with pkgs; [ git vim ];
+in
+```
+
+### Module Design Best Practices
+```nix
+# Good: Clear interface with proper types
+{ config, lib, pkgs, ... }:
+with lib;
+let
+  cfg = config.services.my-service;
+in
+{
+  options.services.my-service = {
+    enable = mkEnableOption "my service";
+    port = mkOption {
+      type = types.port;
+      default = 8080;
+      description = "Port to listen on";
+    };
+  };
+
+  config = mkIf cfg.enable {
+    # Implementation
+  };
+}
+```
+
+### Error Handling
+```nix
+# Good: Clear error messages
+assert lib.assertMsg (port > 0) "Port must be positive";
+
+# Good: Graceful degradation
+let
+  optionalPackage = lib.optional cfg.enableFeature pkgs.some-package;
+in
+```
+
+## Configuration Files
+
+### statix.toml
+```toml
+# Statix configuration for Nix best practices
+[config]
+# Enable specific checks
+checks = ["attrset", "function", "let", "list", "string"]
+```
+
+### deadnix.toml
+```toml
+# Deadnix configuration for dead code elimination
+[config]
+# Exclude specific patterns
+exclude = ["flake.nix"]
+```
+
+## Quality Metrics
+
+### Code Metrics to Track
+- **Lines of Code**: Monitor codebase size and growth
+- **Complexity**: Track cyclomatic complexity
+- **Duplication**: Identify and eliminate code duplication
+- **Test Coverage**: Ensure adequate test coverage
+- **Documentation Coverage**: Track documentation completeness
+
+### Performance Metrics
+- **Build Time**: Monitor configuration build times
+- **Memory Usage**: Track memory usage during builds
+- **Dependency Count**: Monitor number of dependencies
+- **Rebuild Impact**: Track rebuild impact of changes
+
+## Continuous Improvement
+
+### Regular Reviews
+- **Code Reviews**: Regular peer code reviews
+- **Tool Updates**: Keep quality tools updated
+- **Rule Updates**: Update quality rules as needed
+- **Training**: Regular training on best practices
+
+### Quality Monitoring
+- **Automated Checks**: Run quality checks in CI/CD
+- **Metrics Tracking**: Track quality metrics over time
+- **Issue Tracking**: Track and resolve quality issues
+- **Feedback Loop**: Use feedback to improve processes
+
+## Troubleshooting Quality Issues
+
+### Common Issues
+- **Formatting Errors**: Run alejandra to fix formatting
+- **Unused Code**: Run deadnix to identify unused code
+- **Style Violations**: Run statix to identify style issues
+- **Type Errors**: Check type annotations and usage
+
+### Resolution Process
+1. **Identify Issue**: Use tools to identify specific issues
+2. **Understand Cause**: Understand why the issue occurred
+3. **Fix Issue**: Apply appropriate fix
+4. **Verify Fix**: Ensure fix resolves the issue
+5. **Prevent Recurrence**: Update processes to prevent similar issues
+
+## Integration with Development Workflow
+
+### IDE Integration
+- **Format on Save**: Configure IDE to format on save
+- **Real-time Linting**: Enable real-time linting
+- **Error Highlighting**: Show errors and warnings in IDE
+- **Quick Fixes**: Provide quick fixes for common issues
+
+### CI/CD Integration
+- **Quality Gates**: Include quality checks in CI/CD pipeline
+- **Automated Fixes**: Automatically fix simple issues
+- **Quality Reports**: Generate quality reports
+- **Blocking Issues**: Block deployment on critical quality issues
+
+Remember: Code quality is not just about following rules, but about writing maintainable, readable, and reliable code that serves the project's long-term goals.

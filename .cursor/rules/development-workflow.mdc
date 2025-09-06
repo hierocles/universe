@@ -1,0 +1,150 @@
+---
+description: Development Workflow and Testing
+globs:
+alwaysApply: true
+---
+
+# Development Workflow
+
+Follow established development practices for this Nix configuration to ensure code quality and maintainability.
+
+## Pre-commit Hooks
+
+This configuration uses automated pre-commit hooks to maintain code quality:
+
+- **Alejandra**: Automatic Nix code formatting for consistent style
+- **Deadnix**: Remove unused variables and imports to keep code clean
+- **Statix**: Enforce Nix best practices and style guidelines
+
+### Running Pre-commit Checks
+```bash
+# Run all pre-commit hooks
+nix flake check --impure --show-trace
+
+# Run specific checks
+nix run nixpkgs#alejandra -- .
+nix run nixpkgs#deadnix -- .
+nix run nixpkgs#statix -- .
+```
+
+## Testing Strategy
+
+### Configuration Validation
+- **Flake Check**: Use `nix flake check --impure` for comprehensive validation
+- **Module Testing**: Test individual modules in isolation when possible
+- **Integration Testing**: Test complete system configurations
+- **Deployment Testing**: Validate deployment configurations
+
+### Development Shells
+- **Development Environment**: Use development shells for testing
+- **Dependency Management**: Isolate development dependencies
+- **Tool Access**: Ensure development tools are available in shells
+
+## Git Workflow
+
+### Module Discovery
+- **Stage Modules**: Use `git add` to stage modules for Snowfall lib discovery
+- **Automatic Discovery**: Snowfall lib uses git to discover modules
+- **Unstaged Files**: Unstaged files are invisible to the module discovery system
+
+### Commit Practices
+- **Atomic Commits**: Make small, focused commits with single responsibilities
+- **Clear Messages**: Write descriptive commit messages following conventional format
+- **Branch Strategy**: Use meaningful branch names and strategies
+- **Review Process**: Review changes before merging
+
+### Commit Message Format
+```
+type(scope): brief description
+
+Detailed description of changes made.
+
+- Bullet point for specific changes
+- Another bullet point for additional changes
+
+Fixes #issue-number
+```
+
+## Code Quality Standards
+
+### Nix Code Style
+- **Formatting**: Use alejandra for consistent formatting
+- **Naming**: Use descriptive, clear variable and function names
+- **Structure**: Follow Nix best practices and conventions
+- **Documentation**: Add comments for complex logic and module interfaces
+
+### Module Organization
+- **Single Responsibility**: Each module should have one clear purpose
+- **Clear Interfaces**: Define clear input/output interfaces
+- **Composability**: Design modules to be easily composed and reused
+- **Documentation**: Document module purpose, options, and usage
+
+## Development Tools
+
+### Available Commands
+```bash
+# Check configuration
+just check
+
+# Format code
+nix run nixpkgs#alejandra -- .
+
+# Remove unused code
+nix run nixpkgs#deadnix -- .
+
+# Check best practices
+nix run nixpkgs#statix -- .
+```
+
+### IDE Integration
+- **Cursor Server**: Use cursor-server for remote development
+- **Language Server**: Configure Nix language server for better IDE support
+- **Formatting**: Set up automatic formatting on save
+- **Linting**: Enable real-time linting and error detection
+
+## Testing Workflow
+
+### Local Testing
+1. **Make Changes**: Implement changes in modules
+2. **Stage Changes**: Use `git add` to stage modules
+3. **Test Locally**: Run `nix flake check --impure`
+4. **Fix Issues**: Address any linting or validation errors
+5. **Commit Changes**: Commit with descriptive message
+
+### Deployment Testing
+1. **Test Configuration**: Validate configuration changes
+2. **Test Deployment**: Use development deployment targets
+3. **Verify Functionality**: Ensure changes work as expected
+4. **Document Changes**: Update documentation if needed
+
+## Quality Gates
+
+### Before Committing
+- [ ] Code passes all pre-commit hooks
+- [ ] No linting errors or warnings
+- [ ] Code is properly formatted
+- [ ] Unused code is removed
+- [ ] Changes are tested locally
+
+### Before Merging
+- [ ] All tests pass
+- [ ] Code review completed
+- [ ] Documentation updated
+- [ ] Breaking changes documented
+- [ ] Migration path provided if needed
+
+## Troubleshooting
+
+### Common Issues
+- **Module Not Found**: Ensure modules are staged with `git add`
+- **Linting Errors**: Fix formatting and style issues
+- **Build Failures**: Check for syntax errors and missing dependencies
+- **Deployment Issues**: Verify deployment configuration and connectivity
+
+### Getting Help
+- **Documentation**: Check NixOS and Snowfall lib documentation
+- **Community**: Use NixOS forums, Discord, or GitHub discussions
+- **Examples**: Look at similar configurations in the wild
+- **Debugging**: Use `nix repl` for interactive debugging
+
+Remember: Good development practices lead to maintainable, reliable configurations. Always test changes thoroughly and follow established patterns.

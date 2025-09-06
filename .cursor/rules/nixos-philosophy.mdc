@@ -1,0 +1,134 @@
+---
+description: Follow NixOS Philosophy and Best Practices
+globs:
+alwaysApply: true
+---
+
+# NixOS Philosophy and Best Practices
+
+AI agents should adhere to NixOS philosophy and established best practices when working with this configuration.
+
+## Core NixOS Principles
+
+### 1. Declarative Configuration
+- **Everything as Code**: All system configuration should be declarative and version-controlled
+- **Reproducible Builds**: Ensure configurations are deterministic and reproducible
+- **Immutable Infrastructure**: Treat system state as immutable, rebuild rather than modify
+
+### 2. Functional Programming Paradigm
+- **Pure Functions**: Write pure, side-effect-free functions where possible
+- **Composition**: Build complex configurations by composing simpler ones
+- **Immutability**: Prefer immutable data structures and avoid mutable state
+
+### 3. Modularity and Reusability
+- **Small, Focused Modules**: Create modules that do one thing well
+- **Composable Components**: Design modules to be easily composed and reused
+- **Clear Interfaces**: Define clear input/output interfaces for modules
+
+## Nix Language Best Practices
+
+### Code Style
+- **Use `inherit`**: Prefer `inherit (attr) key1 key2;` over `{ key1 = attr.key1; key2 = attr.key2; }`
+- **Descriptive Names**: Use clear, descriptive variable and function names
+- **Consistent Formatting**: Follow Nix formatting conventions (use alejandra formatter)
+- **Documentation**: Add comments for complex logic and module interfaces
+
+### Performance
+- **Lazy Evaluation**: Leverage Nix's lazy evaluation for efficiency
+- **Avoid Deep Recursion**: Structure code to avoid deep recursive calls
+- **Minimize Rebuilds**: Design configurations to minimize unnecessary rebuilds
+
+### Error Handling
+- **Type Safety**: Use proper type annotations and assertions
+- **Clear Error Messages**: Provide helpful error messages for configuration issues
+- **Graceful Degradation**: Handle missing or invalid inputs gracefully
+
+## Configuration Patterns
+
+### Module Design
+```nix
+# Good: Clear interface with proper types
+{ config, lib, pkgs, ... }:
+with lib;
+let
+  cfg = config.services.my-service;
+in
+{
+  options.services.my-service = {
+    enable = mkEnableOption "my service";
+    port = mkOption {
+      type = types.port;
+      default = 8080;
+      description = "Port to listen on";
+    };
+  };
+
+  config = mkIf cfg.enable {
+    # Implementation
+  };
+}
+```
+
+### Package Management
+- **Use Channels**: Prefer stable channels for production, unstable for development
+- **Pin Versions**: Use specific nixpkgs revisions for reproducible builds
+- **Minimal Dependencies**: Only include necessary packages and dependencies
+
+### Security
+- **Principle of Least Privilege**: Grant minimal necessary permissions
+- **Secrets Management**: Use SOPS or other secure secret management
+- **Regular Updates**: Keep packages and system updated regularly
+
+## Snowfall Lib Integration
+
+### Module Organization
+- **Follow Snowfall Patterns**: Use Snowfall lib's opinionated module structure
+- **Automatic Discovery**: Leverage automatic module discovery (no manual imports)
+- **Namespace Usage**: Use the `universe` namespace consistently
+
+### Configuration Structure
+- **System vs Home**: Clearly separate system-level and user-level configurations
+- **Deployment**: Use Snowfall lib's deployment system for remote management
+- **Testing**: Implement proper testing and validation
+
+## Documentation and Maintenance
+
+### Code Documentation
+- **Module Headers**: Include clear module descriptions and examples
+- **Option Documentation**: Document all configuration options thoroughly
+- **Usage Examples**: Provide practical usage examples
+
+### Version Control
+- **Atomic Commits**: Make small, focused commits
+- **Clear Messages**: Write descriptive commit messages
+- **Branch Strategy**: Use meaningful branch names and strategies
+
+## Quality Assurance
+
+### Linting and Formatting
+- **Alejandra**: Use alejandra for consistent code formatting
+- **Deadnix**: Remove unused variables and imports
+- **Statix**: Follow Nix best practices and style guidelines
+
+### Testing
+- **Module Testing**: Test modules in isolation when possible
+- **Integration Testing**: Test complete system configurations
+- **Validation**: Use NixOS configuration validation tools
+
+## Anti-Patterns to Avoid
+
+- **Imperative Configuration**: Avoid imperative, stateful configuration
+- **Global State**: Don't rely on global mutable state
+- **Tight Coupling**: Avoid tightly coupled modules
+- **Magic Numbers**: Use named constants instead of magic numbers
+- **Copy-Paste**: Don't duplicate code; create reusable modules instead
+
+## When in Doubt
+
+1. **Check Official Docs**: Consult NixOS and Nix documentation first
+2. **Look at Examples**: Find similar configurations in the wild
+3. **Ask the Community**: Use NixOS forums, Discord, or GitHub discussions
+4. **Test Incrementally**: Make small changes and test frequently
+5. **Follow Conventions**: Stick to established patterns and conventions
+
+Remember: NixOS is about building reliable, reproducible systems through declarative configuration. Every decision should support these core principles.
