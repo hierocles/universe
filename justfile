@@ -8,11 +8,11 @@ format:
 
 # Remove unused code with deadnix
 clean:
-  deadnix .
+  deadnix --edit
 
 # Check Nix best practices with statix
 lint:
-  statix .
+  statix check
 
 # Run all quality checks
 quality: format clean lint check
