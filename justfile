@@ -1,6 +1,6 @@
 # Validate entire configuration
 check:
-  nix flake check --show-trace
+  nix flake check --show-trace --log-format internal-json -v |& nom --json
 
 # Format Nix code with alejandra
 format:
@@ -27,7 +27,7 @@ rollback-quasar:
 
 # Build system configuration locally
 build-quasar:
-  nix build .#nixosConfigurations.quasar.config.system.build.toplevel
+  nix build .#nixosConfigurations.quasar.config.system.build.toplevel --log-format internal-json -v |& nom --json
 
 # Update flake inputs
 update:
@@ -44,3 +44,6 @@ dev:
 # Enter deployment shell
 dev-deploy:
   nix develop .#deploy-shell
+
+rebuild:
+  doas nixos-rebuild switch --flake . --log-format internal-json -v |& nom --json
