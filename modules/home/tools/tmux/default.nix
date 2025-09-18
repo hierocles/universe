@@ -52,11 +52,6 @@ in {
       ];
 
       extraConfig = ''
-        # Better prefix
-        unbind C-b
-        set-option -g prefix C-a
-        bind-key C-a send-prefix
-
         # Reload config
         bind r source-file ~/.config/tmux/tmux.conf \; display-message "Config reloaded!"
 
