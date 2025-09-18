@@ -197,6 +197,8 @@ with lib.${namespace}; {
       enable = true;
       configFile = ./recyclarr.yaml;
     };
+
+    whisparr.enable = true;
   };
 
   # TODO: Flaresolverr module or include in nixarr module?
