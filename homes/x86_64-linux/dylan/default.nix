@@ -28,6 +28,7 @@ with lib.${namespace}; {
       enable = true;
       authorizedKeys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIt0bjd1TRJ18rMizFAQVz5MU5oDIagcLw0cfio4zaZd dylan@andromeda"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMFYMbx3cgpdjdwg02cl4xHmaD76/ud12Mzv09En26/0"
       ];
       manage-other-hosts = true;
       extraConfigs = ''
