@@ -31,6 +31,17 @@
     darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
+
     # GPG
     gpg-base-conf.url = "github:drduh/config";
     gpg-base-conf.flake = false;
@@ -99,6 +110,11 @@
         nixos-wsl.nixosModules.wsl
         disko.nixosModules.disko
         nixarr.nixosModules.default
+      ];
+
+      systems.modules.darwin = with inputs; [
+        nix-homebrew.darwinModules.default
+        home-manager.darwinModules.home-manager
       ];
 
       homes.modules = with inputs; [

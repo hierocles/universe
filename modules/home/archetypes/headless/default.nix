@@ -19,7 +19,8 @@ in {
       cli = {
         flake = enabled;
         misc = enabled;
-        zsh = enabled;
+        fish = enabled;
+        starship = enabled;
         home-manager = enabled;
       };
 

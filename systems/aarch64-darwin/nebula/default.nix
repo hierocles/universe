@@ -1,21 +1,15 @@
-{
-  lib,
-  config,
-  ...
-}: let
+{lib, ...}: let
   inherit (lib.universe) enabled;
-
-  cfg = config.universe.user;
 in {
-  universe = {};
+  universe = {
+    suites = {
+      common = enabled;
+      development = enabled;
+    };
 
-  nix.settings = {
-    cores = 10;
-    max-jobs = 3;
+    desktop.yabai = enabled;
   };
 
-  system = {
-    primaryUser = "dylan";
-    stateVersion = 5;
-  };
+  environment.systemPath = ["/opt/homebrew/bin"];
+  system.stateVersion = 5;
 }

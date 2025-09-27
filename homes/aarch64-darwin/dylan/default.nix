@@ -1,8 +1,4 @@
-{
-  config,
-  lib,
-  ...
-}: let
+{lib, ...}: let
   inherit (lib.universe) enabled;
 in {
   universe = {
@@ -11,14 +7,23 @@ in {
       name = "dylan";
     };
 
-    services = {
-      sops = {
-        enable = false;
-        defaultSopsFile = lib.getFile "secrets/secrets.yaml";
-        sshKeyPaths = ["${config.home.homeDirectory}/.ssh/id_ed25519"];
-      };
+    cli = {
+      ghostty = enabled;
+      fish = enabled;
+      starship = enabled;
+      tmux = enabled;
+      home-manager = enabled;
+      nixvim = enabled;
+    };
+
+    tools = {
+      git = enabled;
+      direnv = enabled;
+      ssh = enabled;
     };
   };
+
+  home.sessionPath = ["$HOME/bin"];
 
   home.stateVersion = "24.11";
 }

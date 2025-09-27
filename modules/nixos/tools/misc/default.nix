@@ -24,7 +24,6 @@ in {
       ripgrep
       bat
       ranger
-      lsd
       git
       gh
       rsync
@@ -32,9 +31,6 @@ in {
       zig
       btop
       deno
-      flameshot
-      #nvim-pkg
-      #neovim  # Using nvix through Home Manager instead
       devour
       usbutils
       pciutils
@@ -44,14 +40,9 @@ in {
       lsof
       hwinfo
       traceroute
-      gptfdisk
-      parted
       tmux
       cntr
       glibc
-      smartmontools
-      lshw
-      yt-dlp
     ];
   };
 }

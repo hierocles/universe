@@ -43,9 +43,27 @@ in {
         enable = true;
         enableCompletion = true;
         syntaxHighlighting.enable = true;
-
         autosuggestion.enable = true;
-
+        shellAliases = {
+          ".." = "cd ..";
+          "cd.." = "cd ..";
+          "..." = "cd ../..";
+          "...." = "cd ../../..";
+          "....." = "cd ../../../..";
+          "--" = "cd -";
+          mv = "mv -v";
+          rm = "rm -i -v";
+          cp = "cp -v";
+          cat = "bat";
+          ld = "eza -ld */ --no-quotes --time-style long-iso";
+          lla = "eza -lah --no-quotes --time-style long-iso";
+          ll = "eza -lh --no-quotes --time-style long-iso";
+          llr = "eza -lhr --no-quotes --time-style long-iso";
+          lls = "eza -lh -s size --no-quotes --time-style long-iso";
+          llt = "eza -lh -s time --no-quotes --time-style long-iso";
+          lltr = "eza -lhr -s time --no-quotes --time-style long-iso";
+          df = "df -h";
+        };
         initContent = ''
           # Fix an issue with tmux.
           export KEYTIMEOUT=1
@@ -70,16 +88,16 @@ in {
           }
         ];
       };
-
-      starship = {
+      eza = {
+        enableZshIntegration = true;
         enable = true;
-        settings = {
-          character = {
-            success_symbol = "[➜](bold green)";
-            error_symbol = "[✗](bold red) ";
-            vicmd_symbol = "[](bold blue) ";
-          };
-        };
+      };
+      ghostty.enableZshIntegration = lib.mkIf config.${namespace}.cli.ghostty.enable {
+        enable = true;
+      };
+      nix-index.enableZshIntegration = true;
+      starship = lib.mkIf config.${namespace}.cli.starship.enable {
+        enableZshIntegration = true;
       };
     };
   };
