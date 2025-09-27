@@ -18,11 +18,6 @@ in {
 
     universe = {
       nix = enabled;
-
-      cli-apps = {
-        neovim = enabled;
-      };
-
       tools = {
         git = enabled;
         flake = enabled;

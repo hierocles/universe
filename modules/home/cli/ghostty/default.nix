@@ -19,7 +19,7 @@ in {
       enable = true;
       installBatSyntax = true;
       installVimSyntax = true;
-      theme = "catppuccin-mocha";
+      settings.theme = "catppuccin-mocha";
       themes = {
         catppuccin-mocha = {
           background = "1e1e2e";

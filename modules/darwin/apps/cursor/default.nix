@@ -13,6 +13,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    programs.cursor.enable = true;
+    environment.systemPackages = with pkgs; [code-cursor];
   };
 }

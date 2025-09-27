@@ -2,6 +2,9 @@
 check:
   nix flake check --show-trace --log-format internal-json -v |& nom --json
 
+check-all:
+  nix flake check --all-systems --show-trace --log-format internal-json -v |& nom --json
+
 # Format Nix code with alejandra
 format:
   alejandra .

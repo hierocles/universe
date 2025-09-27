@@ -14,14 +14,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    universe.cli.aliases = {
-      ls = "${pkgs.lsd}/bin/lsd --group-dirs first $@";
-      la = "${pkgs.lsd}/bin/lsd -laF --group-dirs first $@";
-      lt = "${pkgs.lsd}/bin/lsd --tree --depth 3 $@";
-      cat = "${pkgs.bat}/bin/bat $@";
-      pcat = "${pkgs.bat}/bin/bat -p $@";
-      grep = "${pkgs.gnugrep}/bin/grep --color=auto $@";
-    };
     home.packages = with pkgs; [
       nurl
       ripgrep-all
