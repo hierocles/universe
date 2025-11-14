@@ -54,8 +54,8 @@
     comma.inputs.nixpkgs.follows = "nixpkgs";
 
     # Run unpatched dynamically compiled binaries
-    nix-ld.url = "github:Mic92/nix-ld";
-    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
+    #nix-ld.url = "github:Mic92/nix-ld";
+    #nix-ld.inputs.nixpkgs.follows = "nixpkgs";
 
     # System Deployment
     deploy-rs.url = "github:serokell/deploy-rs";
@@ -114,6 +114,7 @@
         nixos-wsl.nixosModules.wsl
         disko.nixosModules.disko
         nixarr.nixosModules.default
+        #nix-ld.nixosModules.default
       ];
 
       systems.modules.darwin = with inputs; [

@@ -34,6 +34,7 @@ with lib.${namespace}; {
     tools = {
       nil = enabled;
       vscode-server = enabled;
+      nix-ld = enabled;
     };
     security = {
       gpg = enabled;

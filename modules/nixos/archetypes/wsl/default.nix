@@ -24,7 +24,6 @@ in {
         wslu
       ];
     };
-
     # Limit to main fonts only
     fonts.packages = mkForce (
       with pkgs; [
