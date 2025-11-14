@@ -33,7 +33,7 @@ with lib.${namespace}; {
 
     tools = {
       nil = enabled;
-      cursor-server = enabled;
+      vscode-server = enabled;
     };
     security = {
       gpg = enabled;

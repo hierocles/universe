@@ -23,6 +23,9 @@
     cursor-server.url = "github:zoid-archive/nixos-cursor-server";
     cursor-server.inputs.nixpkgs.follows = "nixpkgs";
 
+    # VS Code server
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
+
     # Home Manager
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -51,8 +54,8 @@
     comma.inputs.nixpkgs.follows = "nixpkgs";
 
     # Run unpatched dynamically compiled binaries
-    #nix-ld.url = "github:Mic92/nix-ld";
-    #nix-ld.inputs.nixpkgs.follows = "nixpkgs";
+    nix-ld.url = "github:Mic92/nix-ld";
+    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
 
     # System Deployment
     deploy-rs.url = "github:serokell/deploy-rs";
@@ -107,6 +110,7 @@
         home-manager.nixosModules.home-manager
         sops-nix.nixosModules.sops
         cursor-server.nixosModules.default
+        vscode-server.nixosModules.default
         nixos-wsl.nixosModules.wsl
         disko.nixosModules.disko
         nixarr.nixosModules.default
