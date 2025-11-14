@@ -1,5 +1,4 @@
 {
-  options,
   config,
   lib,
   host ? "",
@@ -9,8 +8,6 @@
 with lib;
 with lib.universe; let
   cfg = config.universe.services.openssh;
-
-  user = config.users.users.${config.universe.user.name};
 
   name = host; # Use the provided hostname or default if not specified.
 
@@ -97,10 +94,10 @@ in {
       chmod 600 "${config.home.homeDirectory}/.ssh/authorized_keys"
     '';
 
-    programs.zsh.shellAliases = foldl (aliases: system:
+    programs.zsh.shellAliases = foldl (aliases: _system:
       aliases
       // {
-        "ssh-${system}" = "ssh ${system} -t tmux a";
+        "ssh-${stdenv.hostPlatform.system}" = "ssh ${stdenv.hostPlatform.system} -t tmux a";
       }) {} (builtins.attrNames other-hosts);
   };
 }

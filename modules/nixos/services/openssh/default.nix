@@ -1,5 +1,4 @@
 {
-  options,
   config,
   lib,
   host ? "",
@@ -100,10 +99,10 @@ in {
     universe.home.extraOptions = {
       programs.zsh.shellAliases =
         foldl
-        (aliases: system:
+        (aliases: _system:
           aliases
           // {
-            "ssh-${system}" = "ssh ${system} -t tmux a";
+            "ssh-${stdenv.hostPlatform.system}" = "ssh ${stdenv.hostPlatform.system} -t tmux a";
           })
         {}
         (builtins.attrNames other-hosts);

@@ -147,7 +147,7 @@
         deploy-rs.lib;
 
       outputs-builder = channels: {
-        hooks.pre-commit-check = inputs.pre-commit-hooks.lib.${channels.nixpkgs.system}.run {
+        hooks.pre-commit-check = inputs.pre-commit-hooks.lib.${channels.nixpkgs.stdenv.hostPlatform.system}.run {
           src = ./.;
           hooks = {
             alejandra.enable = true;

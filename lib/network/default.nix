@@ -1,7 +1,4 @@
-{
-  lib,
-  inputs,
-}: let
+{inputs}: let
   inherit (inputs.nixpkgs.lib) assertMsg last;
 in {
   network = {

@@ -1,14 +1,13 @@
 {
   mkShell,
   inputs,
-  system,
   pkgs,
   lib,
   ...
 }:
 with lib;
 with lib.universe; let
-  inherit (inputs.self.hooks.${system}.pre-commit-check) shellHook;
+  inherit (inputs.self.hooks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check) shellHook;
 in
   mkShell {
     buildInputs = with pkgs;
@@ -25,7 +24,7 @@ in
         zsh
         sops
       ]
-      ++ inputs.self.hooks.${system}.pre-commit-check.enabledPackages;
+      ++ inputs.self.hooks.${pkgs.stdenv.hostPlatform.system}.pre-commit-check.enabledPackages;
 
     pure = true;
 
